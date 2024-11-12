@@ -9,6 +9,8 @@ import { RoadmapResponse, Suggestion } from '../../lib/types';
 import { getRoadmap } from '../../utils/get_roadmap';
 
 export default function Component() {
+  const name = localStorage.getItem('name') || 'learner';
+
   const apiKey = process.env.REACT_APP_OPENAI_API_KEY || '';
   const [roadmap, setRoadmap] = useState<RoadmapResponse | null>(null);
   const [suggestions] = useState<Suggestion[]>([
@@ -40,7 +42,7 @@ export default function Component() {
         <div className="text-center space-y-4">
           <h1 className="text-2xl font-bold flex items-center justify-center gap-2">
             <Flame className="w-6 h-6 text-orange-500" />
-            Great Ethan! What do you want to learn today?
+            Great {name}! What do you want to learn today?
           </h1>
           <p className="text-gray-600">
             Enter the competence you want to learn, I will generate an
