@@ -34,6 +34,12 @@ export default function Component() {
     setMessages((prevMessages) => [...prevMessages, newMessage]);
   };
 
+  const addPreference = (key: string, value: string): void => {
+    const preferences = JSON.parse(localStorage.getItem('informations') || '[]');
+    preferences.push({ key, value });
+    localStorage.setItem('informations', JSON.stringify(preferences));
+  }
+
   const setName = (name: string) => {
     addMessage(`username = ${name}`);
     localStorage.setItem('name', name);
@@ -162,6 +168,7 @@ The output summary should be kept concise while efficiently summarizing user det
           },
           callback: async ({ key, value }: { [key: string]: any }) => {
             addMessage(`${key} = ${value}`);
+            addPreference(key, value);
             return { ok: true };
           },
         }, {
@@ -205,6 +212,7 @@ The output summary should be kept concise while efficiently summarizing user det
   }, []);
 
   useEffect(() => {
+    console.log('Messages:', messages);
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
@@ -258,7 +266,7 @@ The output summary should be kept concise while efficiently summarizing user det
           </div>
         </div>
 
-        {messages.length > 0 && (
+        {messages.length > 0 && localStorage.getItem('name') && (
           <div className="w-full flex items-center justify-center">
             <button
               onClick={handleFinalSubmit}
