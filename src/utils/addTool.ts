@@ -54,7 +54,7 @@ export const setupTools = (
       },
     },
     async ({ key, value }: { [key: string]: any }) => {
-      setMemoryKv((memoryKv) => {
+      setMemoryKv((memoryKv: { [key: string]: any }) => {
         const newKv = { ...memoryKv };
         newKv[key] = value;
         return newKv;
