@@ -1,27 +1,52 @@
 'use client';
 
 import { ArrowUpCircle, ArrowUpRight, Flame } from 'lucide-react';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from '../../@/components/ui/button';
 import { Input } from '../../@/components/ui/input';
 import { ScrollArea, ScrollBar } from '../../@/components/ui/scroll-area';
 import { RoadmapResponse, Suggestion } from '../../lib/types';
 import { getRoadmap } from '../../utils/get_roadmap';
+import { getSuggestions } from '../../utils/get_suggestions';
 
 export default function Component() {
   const name = localStorage.getItem('name') || 'learner';
 
   const apiKey = process.env.REACT_APP_OPENAI_API_KEY || '';
   const [roadmap, setRoadmap] = useState<RoadmapResponse | null>(null);
-  const [suggestions] = useState<Suggestion[]>([
-    { subject: 'Generate a SaaS pricing calculator' },
-    { subject: 'How can I structure LLM output?' },
-    { subject: 'Calculate the factorial of a number' },
-    { subject: 'Learn React hooks' },
-    { subject: 'Build a REST API with Node.js' },
-    { subject: 'Master CSS Grid layout' },
-  ]);
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+  //   { subject: 'Generate a SaaS pricing calculator' },
+  //   { subject: 'How can I structure LLM output?' },
+  //   { subject: 'Calculate the factorial of a number' },
+  //   { subject: 'Learn React hooks' },
+  //   { subject: 'Build a REST API with Node.js' },
+  //   { subject: 'Master CSS Grid layout' },
+  // ]);
   const [inputValue, setInputValue] = useState('');
+
+  const suggestionsAsync = async () => {
+    const informations = localStorage.getItem('informations');
+    if (informations) {
+      const suggestions = await getSuggestions(apiKey, informations.split('\n'), setSuggestions);
+      setSuggestions(suggestions);
+    }
+    else {
+      setSuggestions(
+        [
+          { subject: 'Generate a SaaS pricing calculator' },
+          { subject: 'How can I structure LLM output?' },
+          { subject: 'Calculate the factorial of a number' },
+          { subject: 'Learn React hooks' },
+          { subject: 'Build a REST API with Node.js' },
+          { subject: 'Master CSS Grid layout' },
+        ]
+      );
+    }
+  };
+
+  useEffect(() => {
+    suggestionsAsync();
+  }, []);
 
   const handleEnterClick = async (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && event.currentTarget.value !== '') {
