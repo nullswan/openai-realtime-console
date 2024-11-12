@@ -540,7 +540,7 @@ export function ConsolePage() {
             </div>
           </div>
           <div className="content-block conversation">
-            <div className="content-block-title">conversation</div>
+            <div className="content-block-title bg-red-500">conversation</div>
             <div className="content-block-body" data-conversation-content>
               {!items.length && `awaiting connection...`}
               {items.map((conversationItem, i) => {
