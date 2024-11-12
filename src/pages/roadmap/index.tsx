@@ -9,7 +9,7 @@ import {
   AccordionTrigger,
 } from '../../@/components/ui/accordion';
 // import { RoadmapResponse } from '../../lib/types';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 interface KeyConcepts {
   name: string;
@@ -32,20 +32,25 @@ interface RoadmapResponse {
   subject: string;
   tasks: Task[];
 }
+
 export default function Component() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  // TODO: Fix UI glitches in panels
+  // TODO: Implement continue to Learning page
+
+  const name = localStorage.getItem('name') || 'learner';
+  const { subjectId } = useParams();
   const [openItem, setOpenItem] = useState<string | undefined>(undefined);
   const [subject, setSubject] = useState<RoadmapResponse | undefined>(undefined);
-  const useNav = useNavigate();
+  const navigate = useNavigate();
 
-  console.log(searchParams.get('subject'));
+  console.log('subjectId:', subjectId);
 
   useEffect(() => {
-    const subject = localStorage.getItem(`${searchParams.get('subject')}`);
-    if (subject) {
-      setSubject(JSON.parse(subject));
+    const subjectData = localStorage.getItem(subjectId);
+    if (subjectData) {
+      setSubject(JSON.parse(subjectData));
     }
-  }, [searchParams]);
+  }, [subjectId]);
 
   const handleAccordionChange = (value: string) => {
     setOpenItem(value === openItem ? undefined : value);
@@ -55,7 +60,7 @@ export default function Component() {
     <div className="w-screen h-screen flex items-center justify-center">
       <div className="max-w-2xl mx-auto p-6 space-y-6">
         <h1 className="text-2xl font-semibold mb-8">
-          👨‍🏫 Ok ! Here is your roadmap:
+          👨‍🏫 Ok {name} ! Here is your roadmap:
         </h1>
         {!subject ? (
           <div>Loading roadmap...</div>
@@ -117,9 +122,7 @@ export default function Component() {
                             variant="default"
                             className="bg-black text-white hover:bg-gray-800 rounded-full px-8 z-10"
                             onClick={() => {
-                              // Handle task progress here
-                              console.log(`Starting task: ${task.name}`);
-                              // handle the logic of starting a task with a quiz
+                              navigate(`/learning/${subjectId}/${task.priority}`);
                             }}
                           >
                             {task.progress ? 'Continue' : 'Start'}
