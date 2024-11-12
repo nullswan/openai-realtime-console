@@ -33,35 +33,35 @@ export const setupTools = (
   setCoords: CoordsSetter
 ) => {
   // Add set_memory tool
-  client.addTool(
-    {
-      name: 'set_memory',
-      description: 'Saves important data about the user into memory.',
-      parameters: {
-        type: 'object',
-        properties: {
-          key: {
-            type: 'string',
-            description:
-              'The key of the memory value. Always use lowercase and underscores, no other characters.',
-          },
-          value: {
-            type: 'string',
-            description: 'Value can be anything represented as a string',
-          },
-        },
-        required: ['key', 'value'],
-      },
-    },
-    async ({ key, value }: { [key: string]: any }) => {
-      setMemoryKv((memoryKv: { [key: string]: any }) => {
-        const newKv = { ...memoryKv };
-        newKv[key] = value;
-        return newKv;
-      });
-      return { ok: true };
-    }
-  );
+//   client.addTool(
+//     {
+//       name: 'set_memory',
+//       description: 'Saves important data about the user into memory.',
+//       parameters: {
+//         type: 'object',
+//         properties: {
+//           key: {
+//             type: 'string',
+//             description:
+//               'The key of the memory value. Always use lowercase and underscores, no other characters.',
+//           },
+//           value: {
+//             type: 'string',
+//             description: 'Value can be anything represented as a string',
+//           },
+//         },
+//         required: ['key', 'value'],
+//       },
+//     },
+//     async ({ key, value }: { [key: string]: any }) => {
+//       setMemoryKv((memoryKv: { [key: string]: any }) => {
+//         const newKv = { ...memoryKv };
+//         newKv[key] = value;
+//         return newKv;
+//       });
+//       return { ok: true };
+//     }
+//   );
 
   // Add get_weather tool
   client.addTool(
@@ -105,6 +105,52 @@ export const setupTools = (
       };
       setMarker({ lat, lng, location, temperature, wind_speed });
       return json;
+    }
+  );
+
+  // Add track_learning tool
+  client.addTool(
+    {
+      name: 'track_learning',
+      description: 'Records key learning points or insights from the conversation.',
+      parameters: {
+        type: 'object',
+        properties: {
+          topic: {
+            type: 'string',
+            description: 'The main subject or category of the learning point',
+          },
+          insight: {
+            type: 'string',
+            description: 'The specific learning point or insight to remember',
+          },
+          timestamp: {
+            type: 'string',
+            description: 'The current timestamp when the learning occurred',
+          }
+        },
+        required: ['topic', 'insight', 'timestamp'],
+      },
+    },
+    async ({ topic, insight, timestamp }: { [key: string]: any }) => {
+      setMemoryKv((memoryKv: { [key: string]: any }) => {
+        const newKv = { ...memoryKv };
+        const learningKey = `learning_${topic.toLowerCase().replace(/\s+/g, '_')}`;
+        
+        // Initialize learning array if it doesn't exist
+        if (!newKv[learningKey]) {
+          newKv[learningKey] = [];
+        }
+        
+        // Add new learning point
+        newKv[learningKey].push({
+          insight,
+          timestamp,
+        });
+        
+        return newKv;
+      });
+      return { ok: true, message: 'Learning point recorded' };
     }
   );
 };
