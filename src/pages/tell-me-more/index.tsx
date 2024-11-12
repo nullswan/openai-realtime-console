@@ -4,22 +4,7 @@ import { useState, useRef, useEffect, useContext } from 'react';
 import { Headphones } from 'lucide-react';
 import { GlobalRefsContext } from '../../lib/wavtools/lib/realtime/client';
 import { useNavigate } from 'react-router-dom';
-
-interface ToolCallbackInput {
-  key: string;
-  value: string;
-}
-
-interface ToolCallbackOutput {
-  ok: boolean;
-}
-
-type ToolCallback = (input: ToolCallbackInput) => Promise<ToolCallbackOutput>;
-
-interface ToolsT {
-  config: any;
-  callback: ToolCallback;
-}
+import { ToolsT } from '../../lib/wavtools/lib/realtime/event';
 
 export default function Component() {
   const [message, setMessage] = useState('');
