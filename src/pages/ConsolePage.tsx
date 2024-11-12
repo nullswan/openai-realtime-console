@@ -18,8 +18,8 @@ import { ItemType } from '@openai/realtime-api-beta/dist/lib/client.js';
 import { WavRecorder, WavStreamPlayer } from '../lib/wavtools/index.js';
 import { instructions } from '../utils/conversation_config.js';
 import { WavRenderer } from '../utils/wav_renderer';
-import { setupTools } from '../utils/addTool';
-
+import { setupTools } from '../utils/add_tool';
+import { getRoadmap } from '../utils/get_roadmap';
 import { X, Edit, Zap, ArrowUp, ArrowDown } from 'react-feather';
 import { Button } from '../components/button/Button';
 import { Toggle } from '../components/toggle/Toggle';
@@ -439,6 +439,16 @@ export function ConsolePage() {
         <div className="content-title">
           <img src="/openai-logomark.svg" />
           <span>realtime console</span>
+          <input
+            type="text"
+            placeholder="Type and press Enter"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                getRoadmap(apiKey, e.currentTarget.value);
+                e.currentTarget.value = '';
+              }
+            }}
+          />
         </div>
         <div className="content-api-key">
           {!LOCAL_RELAY_SERVER_URL && (
