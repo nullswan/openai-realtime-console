@@ -4,11 +4,17 @@ import { useEffect, useState } from 'react';
 import { getRoadmap } from '../../utils/get_roadmap';
 import { getSuggestions } from '../../utils/get_suggestions';
 
+interface KeyConcepts {
+  name: string;
+  isLearned: boolean;
+  description: string;
+}
+
 interface Task {
   priority: number;
   name: string;
   description: string;
-  key_concepts: string[];
+  key_concepts: KeyConcepts[];
   resources: string[];
   practical_applications?: string;
   image?: string;
@@ -85,7 +91,7 @@ function WhatToLearn() {
                     <p>{task.description}</p>
                     <div className='key-concepts'>
                       {task.key_concepts?.map((concept, index) => (
-                        <span key={index} className='concept-tag'>{concept}</span>
+                        <span key={index} className='concept-tag'>{concept.name}</span>
                       ))}
                     </div>
                     {task.practical_applications && (

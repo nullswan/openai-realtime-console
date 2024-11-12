@@ -7,7 +7,7 @@ Create a learning roadmap for the subject provided by the user, outlining struct
 
 Provide a learning plan divided into an array of tasks with explicit prioritization, each task including key information necessary for the user to progress effectively.
 Ensure that tasks cover beginner to advanced levels if applicable, include key resources, and offer practical applications to assist in mastering the topic.
-Generate 5 tasks. Be as concise as possible on the name, description and practical applications.
+Generate as many tasks as needed. Be as concise as possible on the name, description and practical applications.
 
 # Steps
 
@@ -98,19 +98,26 @@ The response should be formulated as a JSON object with the following keys:
 `;
 
 // Define the Zod schema for the learning roadmap
+const KeyConcepts = z.object({
+  name: z.string(),
+  isLearned: z.boolean(),
+  description: z.string()
+});
+
 const Task = z.object({
-    priority: z.number(),
-    name: z.string(),
-    description: z.string(),
-    key_concepts: z.array(z.string()),
-    resources: z.array(z.string()),
-    practical_applications: z.string().optional(),
-    progress: z.string(),
-  });
-  
+  priority: z.number(),
+  name: z.string(),
+  description: z.string(),
+  key_concepts: z.array(KeyConcepts),
+  resources: z.array(z.string()),
+  practical_applications: z.string().optional(),
+  image: z.string().optional(),
+  progress: z.string()
+});
+
 const LearningRoadmap = z.object({
-    subject: z.string(),
-    tasks: z.array(Task),
+  subject: z.string(),
+  tasks: z.array(Task)
 });
 
 const TEMPERATURE = 1.0;
@@ -118,21 +125,27 @@ const TOP_P = 1.0;
 let last_call = new Date();
 let isFirstCall = true;
 
-interface Task {
-  priority: number;
-  name: string;
-  description: string;
-  key_concepts: string[];
-  resources: string[];
-  practical_applications?: string;
-  image?: string;
-  progress: string;
-}
-
-interface RoadmapResponse {
-  subject: string;
-  tasks: Task[];
-}
+interface KeyConcepts {
+    name: string;
+    isLearned: boolean;
+    description: string;
+  }
+  
+  interface Task {
+    priority: number;
+    name: string;
+    description: string;
+    key_concepts: KeyConcepts[];
+    resources: string[];
+    practical_applications?: string;
+    image?: string;
+    progress: string;
+  }
+  
+  interface RoadmapResponse {
+    subject: string;
+    tasks: Task[];
+  }
 
 export async function getRoadmap(apiKey: string, request: string, setResponse: (response: RoadmapResponse) => void): Promise<RoadmapResponse> {
     // Modified rate limiting check
