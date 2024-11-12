@@ -17,7 +17,7 @@ interface ToolCallbackOutput {
   ok: boolean;
 }
 
-type ToolCallback = (input: ToolCallbackInput) => Promise<ToolCallbackOutput>;
+type ToolCallback = (input: ToolCallbackInput | any) => Promise<ToolCallbackOutput> | any;
 
 export interface ToolsT {
   config: any;
