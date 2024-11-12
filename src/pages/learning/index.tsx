@@ -10,6 +10,28 @@ interface MessageT {
   message: string;
 }
 
+interface KeyConcepts {
+  name: string;
+  isLearned: boolean;
+  description: string;
+}
+
+interface Task {
+  priority: number;
+  name: string;
+  description: string;
+  key_concepts: KeyConcepts[];
+  resources: string[];
+  practical_applications?: string;
+  image?: string;
+  progress: string;
+}
+
+interface Subject {
+  subject: string;
+  tasks: Task[];
+}
+
 // TODO: Set Priority to done @Alexis
 // TODO: Show some confetti before redirecting
 // TODO: Use links for hints
@@ -24,6 +46,14 @@ function Learning() {
 
   const addMessage = (msg: MessageT) => {
     setMessages((prev) => [...prev, msg]);
+  };
+
+  const setPriority = (subject: string, priority: number, status: 'Done' | 'In Progress') => {
+    const subjectData = JSON.parse(localStorage.getItem(subject) || '[]');
+    const updatedData = subjectData.map((item: Task) => 
+      item.priority === priority ? { ...item, progress: status } : item
+    );
+    localStorage.setItem(subject, JSON.stringify(updatedData));
   };
 
   useEffect(() => {
