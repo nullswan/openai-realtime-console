@@ -61,24 +61,26 @@ function WhatToLearn() {
         </div>
         {roadmap && (
           <div className='content-block'>
-            <h1>{roadmap?.subject}</h1>
-            <div className='carousel'>
-              <button onClick={handlePrevTask}>&lt;</button>
-              <div className='task-card'>
-                <h2>{roadmap?.tasks[currentTaskIndex].name}</h2>
-                <p>{roadmap?.tasks[currentTaskIndex].description}</p>
-                <div className='key-concepts'>
-                  {roadmap?.tasks[currentTaskIndex]?.key_concepts?.map((concept, index) => (
-                    <span key={index} className='concept-tag'>{concept}</span>
-                  ))}
-                </div>
-                {roadmap?.tasks[currentTaskIndex]?.practical_applications && (
-                  <p className='applications'>
-                    <strong>Practical Applications:</strong> {roadmap?.tasks[currentTaskIndex]?.practical_applications}
-                  </p>
-                )}
+            <h1>{roadmap.subject}</h1>
+            <div className='carousel-container'>
+              <div className='carousel'>
+                {roadmap.tasks.map((task, index) => (
+                  <div key={index} className='task-card'>
+                    <h2>{task.name}</h2>
+                    <p>{task.description}</p>
+                    <div className='key-concepts'>
+                      {task.key_concepts?.map((concept, index) => (
+                        <span key={index} className='concept-tag'>{concept}</span>
+                      ))}
+                    </div>
+                    {task.practical_applications && (
+                      <p className='applications'>
+                        <strong>Practical Applications:</strong> {task.practical_applications}
+                      </p>
+                    )}
+                  </div>
+                ))}
               </div>
-              <button onClick={handleNextTask}>&gt;</button>
             </div>
           </div>
         )}
