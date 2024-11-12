@@ -18,6 +18,7 @@
     "dotenv": "^16.4.5",
     "framer-motion": "^11.11.13",
     "leaflet": "^1.9.4",
+    "lucide-react": "^0.456.0",
 <<<<<<< HEAD
     "openai": "^4.71.1",
 =======

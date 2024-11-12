@@ -1,0 +1,60 @@
+/* GettingStarted.css */
+[data-component='GettingStartedPage'] {
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 12px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin: 0px 8px;
+}
+
+[data-component='GettingStartedPage'] .content-top {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  min-height: 40px;
+}
+
+[data-component='GettingStartedPage'] .content-title {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+[data-component='GettingStartedPage'] .content-title h1 {
+  margin: 0;
+}
+
+[data-component='GettingStartedPage'] .content-main {
+  flex-grow: 1;
+  flex-shrink: 1 !important;
+  margin: 0px 16px;
+  display: flex;
+  overflow: hidden;
+  margin-bottom: 24px;
+  align-items: center;
+  justify-content: center;
+}
+
+[data-component='GettingStartedPage'] .content-block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+[data-component='GettingStartedPage'] .content-block input {
+  width: 200px;
+  height: 50px;
+  border-radius: 25px;
+  padding: 0 20px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
