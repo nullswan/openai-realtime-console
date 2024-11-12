@@ -161,7 +161,7 @@ export async function getRoadmap(apiKey: string, request: string, setResponse: (
 
   try {
     const stream = await client.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-4o",
       messages: [
         { role: "system", content: learningRoadmapTemplate },
         { role: "user", content: request }
