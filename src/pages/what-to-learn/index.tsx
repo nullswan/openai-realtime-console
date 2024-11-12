@@ -23,26 +23,13 @@ function WhatToLearn() {
   const navigate = useNavigate();
   const apiKey: string = process.env.REACT_APP_OPENAI_API_KEY || '';
   const [roadmap, setRoadmap] = useState<RoadmapResponse | null>(null);
-  const [currentTaskIndex, setCurrentTaskIndex] = useState(0);
 
   const handleEnterClick = async (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && event.currentTarget.value !== '') {
       const roadmap = await getRoadmap(apiKey, event.currentTarget.value, setRoadmap);
-      console.log(roadmap);
+      // console.log(roadmap);
     }
   }
-
-  useEffect(() => {
-    console.log(roadmap);
-  }, [roadmap]);
-
-  const handlePrevTask = () => {
-    setCurrentTaskIndex((prev) => (prev > 0 ? prev - 1 : roadmap?.tasks.length! - 1));
-  };
-
-  const handleNextTask = () => {
-    setCurrentTaskIndex((prev) => (prev < roadmap?.tasks.length! - 1 ? prev + 1 : 0));
-  };
 
   return (
     <div data-component='WhatToLearn'>

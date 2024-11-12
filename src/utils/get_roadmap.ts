@@ -110,6 +110,7 @@ const LearningRoadmap = z.object({
 const TEMPERATURE = 1.0;
 const TOP_P = 1.0;
 let last_call = new Date();
+let isFirstCall = true;
 
 interface Task {
   priority: number;
@@ -128,69 +129,113 @@ interface RoadmapResponse {
 }
 
 export async function getRoadmap(apiKey: string, request: string, setResponse: (response: RoadmapResponse) => void): Promise<RoadmapResponse> {
-  // Rate limiting check
+  // Modified rate limiting check
   const perf = performance.now();
-  if (new Date().getTime() - last_call.getTime() < 3000) {
-    return { subject: "", tasks: [] };
+  if (!isFirstCall && new Date().getTime() - last_call.getTime() < 3000) {
+    throw new Error('Please wait a few seconds before making another request');
   }
+  isFirstCall = false;
   last_call = new Date();
 
   const client = new OpenAI({ apiKey: apiKey, dangerouslyAllowBrowser: true });
   console.log("getRoadmap", request);
 
-  const stream = await client.chat.completions.create({
-    model: "gpt-4o-mini",
-    messages: [
-      { role: "system", content: learningRoadmapTemplate },
-      { role: "user", content: request }
-    ],
-    response_format: zodResponseFormat(LearningRoadmap, "learning_roadmap"),
-    temperature: TEMPERATURE,
-    top_p: TOP_P,
-    stream: true,
-  });
-
-  let fullContent = '';
-  let currentResponse: Partial<RoadmapResponse> = { subject: '', tasks: [] };
-  
-  for await (const chunk of stream) {
-    const content = chunk.choices[0]?.delta?.content || '';
-    fullContent += content;
-    
-    // Try to parse the accumulated content as JSON
-    try {
-      // Remove any trailing commas and complete the JSON structure if needed
-      let parseableContent = fullContent;
-      if (!parseableContent.endsWith('}')) {
-        parseableContent = parseableContent.replace(/,\s*$/, '') + '}]}';
-      }
-      
-      const partialResponse = JSON.parse(parseableContent) as RoadmapResponse;
-      
-      // Update the current response
-      if (partialResponse.subject) {
-        currentResponse.subject = partialResponse.subject;
-      }
-      if (partialResponse.tasks?.length > 0) {
-        setResponse(partialResponse);
-        currentResponse.tasks = partialResponse.tasks;
-      }
-    } catch (error) {
-      // Continue accumulating if parsing fails
-      continue;
-    }
-  }
-
-  console.log("getRoadmap", performance.now() - perf, "ms taken");
-  
-  // Return the accumulated response if it has content, otherwise try parsing the full content
-  if (currentResponse.subject && currentResponse.tasks && currentResponse.tasks.length > 0) {
-    return currentResponse as RoadmapResponse;
-  }
-
   try {
-    return JSON.parse(fullContent) as RoadmapResponse;
-  } catch (error) {
-    return { subject: '', tasks: [] };
+    const stream = await client.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: learningRoadmapTemplate },
+        { role: "user", content: request }
+      ],
+      response_format: zodResponseFormat(LearningRoadmap, "learning_roadmap"),
+      temperature: TEMPERATURE,
+      top_p: TOP_P,
+      stream: true,
+    });
+
+    let fullContent = '';
+    let currentResponse: Partial<RoadmapResponse> = { subject: '', tasks: [] };
+    
+    try {
+      for await (const chunk of stream) {
+        const content = chunk.choices[0]?.delta?.content || '';
+        fullContent += content;
+        
+        try {
+          // Remove any trailing commas and complete the JSON structure if needed
+          let parseableContent = fullContent;
+          if (!parseableContent.endsWith('}')) {
+            parseableContent = parseableContent.replace(/,\s*$/, '') + '}]}';
+          }
+          
+          const partialResponse = JSON.parse(parseableContent) as RoadmapResponse;
+          
+          if (partialResponse.subject) {
+            try {
+              const existingSubjects = JSON.parse(localStorage.getItem('subjects') || '[]');
+              if (!existingSubjects.includes(partialResponse.subject)) {
+                existingSubjects.push(partialResponse.subject);
+                localStorage.setItem('subjects', JSON.stringify(existingSubjects));
+              }
+              currentResponse.subject = partialResponse.subject;
+            } catch (storageError) {
+              console.error('LocalStorage error:', storageError);
+              // Continue execution even if localStorage fails
+            }
+          }
+
+          if (partialResponse.tasks?.length > 0) {
+            const subject = currentResponse.subject;
+            try {
+              localStorage.setItem(`${subject}`, JSON.stringify(partialResponse));
+            } catch (storageError) {
+              console.error('LocalStorage error:', storageError);
+            }
+            setResponse(partialResponse);
+            currentResponse.tasks = partialResponse.tasks;
+          }
+        } catch (parseError) {
+          // Continue accumulating if parsing fails
+          continue;
+        }
+      }
+    } catch (streamError) {
+      console.error('Stream processing error:', streamError);
+      throw new Error('Error processing the AI response stream');
+    }
+
+    console.log("getRoadmap", performance.now() - perf, "ms taken");
+    
+    // Return the accumulated response if it has content
+    if (currentResponse.subject && currentResponse.tasks && currentResponse.tasks.length > 0) {
+      return currentResponse as RoadmapResponse;
+    }
+
+    // Try parsing the full content as a last resort
+    try {
+      return JSON.parse(fullContent) as RoadmapResponse;
+    } catch (parseError) {
+      throw new Error('Failed to parse AI response');
+    }
+
+  } catch (error: any) {
+    // Handle specific OpenAI API errors
+    if (error?.status === 401) {
+      throw new Error('Invalid API key. Please check your OpenAI API key');
+    } else if (error?.status === 429) {
+      throw new Error('Rate limit exceeded. Please try again later');
+    } else if (error?.status === 500) {
+      throw new Error('OpenAI service error. Please try again later');
+    } else if (error?.status === 503) {
+      throw new Error('OpenAI service is temporarily unavailable');
+    }
+
+    // Handle network errors
+    if (error instanceof TypeError && error.message === 'Failed to fetch') {
+      throw new Error('Network error. Please check your internet connection');
+    }
+
+    // Throw the original error message or a generic one
+    throw new Error(error?.message || 'An unexpected error occurred');
   }
 }
