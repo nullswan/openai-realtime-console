@@ -11,6 +11,7 @@ import { getSuggestions } from '../../utils/get_suggestions';
 
 export default function Component() {
   const name = localStorage.getItem('name') || 'learner';
+  /* TODO: mettre le carroussel horizsontal et mettre le loader quand tu fais la completion, et juste le autonavigate quand la completion est finis. */
 
   const apiKey = process.env.REACT_APP_OPENAI_API_KEY || '';
   const [roadmap, setRoadmap] = useState<RoadmapResponse | null>(null);
