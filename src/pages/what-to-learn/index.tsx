@@ -6,8 +6,10 @@ import { Button } from '../../@/components/ui/button';
 import { Input } from '../../@/components/ui/input';
 import { ScrollArea, ScrollBar } from '../../@/components/ui/scroll-area';
 import { RoadmapResponse, Suggestion } from '../../lib/types';
+import { getRoadmap } from '../../utils/get_roadmap';
 
 export default function Component() {
+  const apiKey = process.env.REACT_APP_OPENAI_API_KEY || '';
   const [roadmap, setRoadmap] = useState<RoadmapResponse | null>(null);
   const [suggestions] = useState<Suggestion[]>([
     { subject: 'Generate a SaaS pricing calculator' },
@@ -19,12 +21,10 @@ export default function Component() {
   ]);
   const [inputValue, setInputValue] = useState('');
 
-  const handleEnterClick = async (
-    event: React.KeyboardEvent<HTMLInputElement>
-  ) => {
+  const handleEnterClick = async (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && event.currentTarget.value !== '') {
-      // Implement getRoadmap functionality here
-      console.log('Getting roadmap for:', event.currentTarget.value);
+      const roadmap = await getRoadmap(apiKey, event.currentTarget.value, setRoadmap);
+      console.log("Function returned:", roadmap);
     }
   };
 
