@@ -19,12 +19,7 @@
     "framer-motion": "^11.11.13",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.456.0",
-<<<<<<< HEAD
-    "openai": "^4.71.1",
-=======
-    "lucide-react": "^0.456.0",
     "openai": "^4.72.0",
->>>>>>> d2ad969 (added the acernity ui)
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-feather": "^2.0.10",
