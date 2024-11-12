@@ -21,6 +21,8 @@ interface ToolsT {
   callback: ToolCallback;
 }
 
+// TODO: Add final submit
+
 export default function Component() {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<string[]>([]);
@@ -30,7 +32,6 @@ export default function Component() {
 
   const addMessage = (newMessage: string): void => {
     setMessages((prevMessages) => [...prevMessages, newMessage]);
-    // TODO: Add preference persistency
   };
 
   const handleSubmit = () => {
@@ -173,6 +174,12 @@ The output summary should be kept concise while efficiently summarizing user det
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
