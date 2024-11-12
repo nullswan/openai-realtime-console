@@ -10,8 +10,9 @@ interface MessageT {
   message: string;
 }
 
-// TODO: Set Priority to done
+// TODO: Set Priority to done @Alexis
 // TODO: Show some confetti before redirecting
+// TODO: Use links for hints
 function Learning() {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<MessageT[]>([]);
@@ -115,7 +116,7 @@ function Learning() {
         callback: async ({ hint }) => {
           console.log('Hint:', hint);
           addMessage({
-            role: 'assistant', message: hint
+            role: 'assistant', message: hint + '\nhttps://www.perplexity.ai/search/new?q=' + hint
           });
         }
       }
@@ -134,8 +135,9 @@ function Learning() {
   }, []);
 
   useEffect(() => {
-    if (progress === 100)
+    if (progress === 100) {
       navigate('/roadmap/' + subjectId);
+    }
   }, [progress]);
 
   return (
