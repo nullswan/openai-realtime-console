@@ -8,7 +8,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '../../@/components/ui/accordion';
-// import { RoadmapResponse } from '../../lib/types';
 import { useNavigate, useParams } from 'react-router-dom';
 
 interface KeyConcepts {
@@ -33,22 +32,30 @@ interface RoadmapResponse {
   tasks: Task[];
 }
 
-export default function Component() {
+export default function Roadmap() {
   // TODO: Fix UI glitches in panels
   // TODO: Implement continue to Learning page
 
   const name = localStorage.getItem('name') || 'learner';
-  const { subjectId } = useParams();
+  const navigate = useNavigate();
+  const { subjectId } = useParams<{ subjectId: string }>();
+
   const [openItem, setOpenItem] = useState<string | undefined>(undefined);
   const [subject, setSubject] = useState<RoadmapResponse | undefined>(undefined);
-  const navigate = useNavigate();
-
-  console.log('subjectId:', subjectId);
 
   useEffect(() => {
-    const subjectData = localStorage.getItem(subjectId);
-    if (subjectData) {
-      setSubject(JSON.parse(subjectData));
+    console.log('subjectId:', subjectId);
+    if (subjectId) {
+      const decodedSubjectId = decodeURIComponent(subjectId);
+      const subjectData = localStorage.getItem(decodedSubjectId);
+      console.log('subjectData:', subjectData);
+      if (subjectData) {
+        setSubject(JSON.parse(subjectData));
+      } else {
+        console.error(`Aucune donnée trouvée dans localStorage pour subjectId: ${decodedSubjectId}`);
+      }
+    } else {
+      console.error('subjectId est null ou undefined');
     }
   }, [subjectId]);
 
@@ -60,10 +67,10 @@ export default function Component() {
     <div className="w-screen h-screen flex items-center justify-center">
       <div className="max-w-2xl mx-auto p-6 space-y-6">
         <h1 className="text-2xl font-semibold mb-8">
-          👨‍🏫 Ok {name} ! Here is your roadmap:
+          👨‍🏫 Ok {name}! Voici votre feuille de route :
         </h1>
         {!subject ? (
-          <div>Loading roadmap...</div>
+          <div>Chargement de la feuille de route...</div>
         ) : (
           <div className="space-y-4">
             {subject.tasks.map((task, index) => (
@@ -80,7 +87,7 @@ export default function Component() {
                       <div className="text-left">
                         <h2 className="text-xl font-medium text-gray-800">
                           <span className="font-semibold">
-                            Step {task.priority}{' '}
+                            Étape {task.priority}{' '}
                           </span>
                           : {task.name}
                         </h2>
@@ -88,9 +95,11 @@ export default function Component() {
                     </AccordionTrigger>
                     <AccordionContent className="px-6 pb-6 w-[60vw]">
                       <div className="relative">
-                        <p className="text-gray-600 mb-4 max-w-[40vw]">{task.description}</p>
+                        <p className="text-gray-600 mb-4 max-w-[40vw]">
+                          {task.description}
+                        </p>
                         <h3 className="font-medium text-gray-800 mb-2">
-                          Key Concepts:
+                          Concepts clés :
                         </h3>
                         <ul className="space-y-1 list-disc list-inside text-gray-600 mb-4">
                           {task.key_concepts.map((concept, i) => (
@@ -100,7 +109,7 @@ export default function Component() {
                           ))}
                         </ul>
                         <h3 className="font-medium text-gray-800 mb-2">
-                          Resources:
+                          Ressources :
                         </h3>
                         <ul className="space-y-1 list-disc list-inside text-gray-600 mb-4">
                           {task.resources.map((resource, i) => (
@@ -112,7 +121,7 @@ export default function Component() {
                         {task.practical_applications && (
                           <p className="text-gray-600 mb-4">
                             <span className="font-medium text-gray-800">
-                              Practical Applications:
+                              Applications pratiques :
                             </span>{' '}
                             {task.practical_applications}
                           </p>
@@ -125,7 +134,7 @@ export default function Component() {
                               navigate(`/learning/${subjectId}/${task.priority}`);
                             }}
                           >
-                            {task.progress ? 'Continue' : 'Start'}
+                            {task.progress ? 'Continuer' : 'Commencer'}
                           </Button>
                         </div>
                       </div>
