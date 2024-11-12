@@ -27,7 +27,6 @@ import { Map } from '../components/Map';
 
 import './ConsolePage.scss';
 import { isJsxOpeningLikeElement } from 'typescript';
-import Profile from './profile/profile';
 
 /**
  * Type for result from get_weather() function call
@@ -633,7 +632,7 @@ export function ConsolePage() {
           </div>
         </div>
         <div className="content-right">
-            <Profile marker={marker} coords={coords} memoryKv={memoryKv} />
+            {/* <Profile marker={marker} coords={coords} memoryKv={memoryKv} /> */}
         </div>
       </div>
     </div>

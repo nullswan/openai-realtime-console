@@ -14,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<TellMeMore />} />
           <Route path="/console" element={<ConsolePage />} />
+          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/learning/:subject/:priority" element={<LearningPage />} />
           <Route path="/roadmap" element={<Roadmap />} />
           <Route path="/tell-me-more" element={<TellMeMore />} />
