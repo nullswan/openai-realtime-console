@@ -58,24 +58,24 @@ const suggestionsSchema = z.object({
 
 export async function getSuggestions(
   apiKey: string, 
-  request: string[], 
+  informations: string[], 
   setResponse: (response: Suggestion[]) => void
 ): Promise<Suggestion[]> {
     const perf = performance.now();
     if (!isFirstCall && new Date().getTime() - last_call.getTime() < 100) {
-      throw new Error('Please wait a few seconds before making another request');
+      throw new Error('Please wait a few seconds before making another informations');
     }
     isFirstCall = false;
     last_call = new Date();
   
     const client = new OpenAI({ apiKey: apiKey, dangerouslyAllowBrowser: true });
-    console.log("getSuggestions", request);
+    console.log("getSuggestions", informations);
 
     const response = await client.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
         { role: "system", content: suggestionsPrompt },
-        { role: "user", content: request.join('\n') }
+        { role: "user", content: informations.join('\n') }
       ],
       response_format: zodResponseFormat(suggestionsSchema, "suggestions"),
       temperature: TEMPERATURE,
