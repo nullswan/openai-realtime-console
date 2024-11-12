@@ -1,12 +1,12 @@
 import { useParams } from 'react-router-dom';
 
 function Learning() {
-  const { subject, priority } = useParams();
+  const { subjectId, priorityId } = useParams();
 
   return (
     <div>
-      <h1>{subject}</h1>
-      <p>Priority: {priority}</p>
+      <h1>{subjectId}</h1>
+      <p>Priority: {priorityId}</p>
     </div>
   );
 }

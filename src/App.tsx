@@ -15,8 +15,8 @@ function App() {
           <Routes>
             <Route path="/" element={<TellMeMore />} />
             <Route path="/console" element={<ConsolePage />} />
-            <Route path="/learning/:subject/:priority" element={<LearningPage />} />
-            <Route path="/roadmap" element={<Roadmap />} />
+            <Route path="/learning/:subjectId/:priorityId" element={<LearningPage />} />
+            <Route path="/roadmap/:subjectId" element={<Roadmap />} />
             <Route path="/tell-me-more" element={<TellMeMore />} />
             <Route path="/what-to-learn" element={<WhatToLearn />} />
           </Routes>
