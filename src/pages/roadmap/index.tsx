@@ -35,6 +35,7 @@ interface RoadmapResponse {
 export default function Roadmap() {
   // TODO: Fix UI glitches in panels
   // TODO: Implement continue to Learning page
+  // TODO: Implement the progress == "Done" design change
 
   const name = localStorage.getItem('name') || 'learner';
   const navigate = useNavigate();
@@ -73,7 +74,7 @@ export default function Roadmap() {
           <div>Chargement de la feuille de route...</div>
         ) : (
           <div className="space-y-4">
-            {subject.tasks.map((task, index) => (
+            {subject?.tasks && subject?.tasks?.map((task, index) => (
               <div key={index} className="bg-gray-50 rounded-xl w-[40vw]">
                 <Accordion
                   type="single"
@@ -102,7 +103,7 @@ export default function Roadmap() {
                           Concepts clés :
                         </h3>
                         <ul className="space-y-1 list-disc list-inside text-gray-600 mb-4">
-                          {task.key_concepts.map((concept, i) => (
+                          {task?.key_concepts && task?.key_concepts?.map((concept, i) => (
                             <li key={i} className="leading-relaxed">
                               {concept.name}
                             </li>
@@ -112,7 +113,7 @@ export default function Roadmap() {
                           Ressources :
                         </h3>
                         <ul className="space-y-1 list-disc list-inside text-gray-600 mb-4">
-                          {task.resources.map((resource, i) => (
+                          {task.resources && task?.resources?.map((resource, i) => (
                             <li key={i} className="leading-relaxed">
                               {resource}
                             </li>

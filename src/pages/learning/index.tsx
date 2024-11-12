@@ -34,7 +34,6 @@ interface Subject {
   tasks: Task[];
 }
 
-// TODO: Set Priority to done @Alexis
 // TODO: Show some confetti before redirecting
 // TODO: Use links for hints
 function Learning() {
@@ -51,12 +50,30 @@ function Learning() {
   };
 
   const setPriority = (subject: string, priority: number, status: 'Done' | 'In Progress') => {
-    const subjectData = JSON.parse(localStorage.getItem(subject) || '[]');
-    const updatedData = subjectData.map((item: Task) => 
-      item.priority === priority ? { ...item, progress: status } : item
-    );
-    localStorage.setItem(subject, JSON.stringify(updatedData));
+    try {
+      let subjectData = JSON.parse(localStorage.getItem(subject) || '{}') as Subject;
+      if (!Array.isArray(subjectData.tasks)) {
+        subjectData = { subject, tasks: [subjectData.tasks] };
+      }
+      
+      const updatedTasks = subjectData.tasks.map((item: Task) => 
+        item.priority === priority ? { ...item, progress: status } : item
+      );
+      
+      const updatedData = {
+        ...subjectData,
+        tasks: updatedTasks
+      };
+      
+      localStorage.setItem(subject, JSON.stringify(updatedData));
+    } catch (error) {
+      console.error('Error updating priority:', error);
+    }
   };
+
+  useEffect(() => {
+    setPriority(subjectId, parseInt(priorityId), progress === 100 ? 'Done' : 'In Progress');
+  }, [progress]);
 
   useEffect(() => {
     console.log('Messages:', messages);
@@ -170,6 +187,7 @@ function Learning() {
 
   useEffect(() => {
     if (progress === 100) {
+      setPriority(subjectId, parseInt(priorityId), 'Done');
       navigate('/roadmap/' + subjectId);
     }
   }, [progress]);
