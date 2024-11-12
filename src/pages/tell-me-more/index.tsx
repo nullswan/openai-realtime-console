@@ -21,8 +21,6 @@ interface ToolsT {
   callback: ToolCallback;
 }
 
-// TODO: Add final submit
-
 export default function Component() {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<string[]>([]);
