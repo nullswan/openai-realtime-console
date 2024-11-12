@@ -34,6 +34,11 @@ export default function Component() {
     setMessages((prevMessages) => [...prevMessages, newMessage]);
   };
 
+  const setName = (name: string) => {
+    addMessage(`username = ${name}`);
+    localStorage.setItem('name', name);
+  };
+
   const handleSubmit = () => {
     if (message.trim()) {
       setMessage('');
@@ -104,7 +109,7 @@ The output summary should be kept concise while efficiently summarizing user det
 **User Response**: "My name is Alex."
 
 **Assistant**: "Nice to meet you, Alex!"  
-**Function Call**: set_preference(name="Alex")  
+**Function Call**: set_name(name="Alex")  
 "What kind of topics do you love learning about?"
 
 **User Response**: "I like history, especially ancient mythology. Also, interested in psychology."
@@ -159,6 +164,30 @@ The output summary should be kept concise while efficiently summarizing user det
             addMessage(`${key} = ${value}`);
             return { ok: true };
           },
+        }, {
+          config: {
+            name: 'set_name',
+            description: 'Saves the user\'s name into memory.',
+            parameters: {
+              type: 'object',
+              properties: {
+                key: {
+                  type: 'string',
+                  description:
+                    'The key of the memory value. Always name.',
+                },
+                value: {
+                  type: 'string',
+                  description: 'The user\'s name.',
+                },
+              },
+              required: ['key', 'value'],
+            },
+          },
+          callback: async ({ key, value }: { [key: string]: any }) => {
+            setName(value);
+            return { ok: true };
+          }
         }
       ]
     );
