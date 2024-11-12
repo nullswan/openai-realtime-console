@@ -12,7 +12,6 @@ function App() {
         <Routes>
           <Route path="/" element={<GettingStarted />} />
           <Route path="/console" element={<ConsolePage />} />
-          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/learning" element={<LearningPage />} />
         </Routes>
       </Router>
