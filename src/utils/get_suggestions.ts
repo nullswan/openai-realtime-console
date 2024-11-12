@@ -62,7 +62,7 @@ export async function getSuggestions(
   setResponse: (response: Suggestion[]) => void
 ): Promise<Suggestion[]> {
     const perf = performance.now();
-    if (!isFirstCall && new Date().getTime() - last_call.getTime() < 3000) {
+    if (!isFirstCall && new Date().getTime() - last_call.getTime() < 100) {
       throw new Error('Please wait a few seconds before making another request');
     }
     isFirstCall = false;
