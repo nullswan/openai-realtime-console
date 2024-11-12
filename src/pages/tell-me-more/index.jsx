@@ -12,10 +12,24 @@ export default function Component() {
     setMessages((prev) => [...prev, newMessage]);
   };
 
+  useEffect(() => {
+    setMessages([]);
+    const informations = JSON.parse(localStorage.getItem('informations') || '[]');
+    for (const info of informations) {
+      addMessage(info);
+    }
+  }, []);
+
   const handleSubmit = () => {
     if (message.trim()) {
       addMessage(message);
       setMessage('');
+
+      // Add to the local storage, as an array of informations
+      const informations = JSON.parse(localStorage.getItem('informations') || '[]');
+      informations.push(message);
+      localStorage.setItem('informations', JSON.stringify(informations));
+      console.log(localStorage.getItem('informations'));
     }
   };
 
