@@ -32,7 +32,7 @@ function WhatToLearn() {
 
   const getSuggestionsAsync = async (informations: string[]) => {
     const suggestions = await getSuggestions(apiKey, informations, setSuggestions);
-    console.log(suggestions);
+    setSuggestions(suggestions);
   }
 
 
@@ -62,6 +62,18 @@ function WhatToLearn() {
             onKeyDown={async (event) => await handleEnterClick(event)}
           />
         </div>
+        {suggestions.length > 0 && (
+          <div className='content-block bg-purple-500'>
+            <h1>Suggestions</h1>
+            <div className='carousel-container'>
+              {suggestions.map((suggestion, index) => (
+                <div key={index} className='suggestion-card'>
+                  <h2>{suggestion.subject}</h2>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
         {roadmap && (
           <div className='content-block'>
             <h1>{roadmap.subject}</h1>
