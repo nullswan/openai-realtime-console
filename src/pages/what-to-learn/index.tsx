@@ -82,7 +82,7 @@ export default function Component() {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleEnterClick}
-              placeholder="I want to learn Machine Learning"
+              placeholder="I want to learn about ..."
               className="w-full pr-14 h-12 text-lg rounded-full"
             />
             <Button
