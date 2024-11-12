@@ -5,9 +5,11 @@ import { GlobalRefsContext } from '../../lib/wavtools/lib/realtime/client';
 import { ToolsT } from '../../lib/wavtools/lib/realtime/event';
 import { learningPrompt } from './prompt';
 
+
 interface MessageT {
   role: 'user' | 'assistant';
   message: string;
+  link?: string;
 }
 
 interface KeyConcepts {
@@ -146,7 +148,9 @@ function Learning() {
         callback: async ({ hint }) => {
           console.log('Hint:', hint);
           addMessage({
-            role: 'assistant', message: hint + '\nhttps://www.perplexity.ai/search/new?q=' + hint
+            role: 'assistant',
+            message: hint,
+            link: 'https://www.perplexity.ai/search/new?q=' + encodeURIComponent(hint)
           });
         }
       }
@@ -187,6 +191,17 @@ function Learning() {
                 </div>
                 <div className={`bg-gray-50 rounded-2xl p-4 break-words ${msg.role === 'user' ? 'ml-auto' : 'mr-auto'}`}>
                   {msg.message}
+                  {msg.link ? (
+                    <div className="flex mt-2 space-x-2 items-center">
+                      {/* Lucide Bubble Icon */}
+                      <svg className="w-4 h-4 text-blue-500">
+                        <use xlinkHref="#lucide-bubble-chart"></use>
+                      </svg>
+                      <a href={msg.link} target="_blank" className="text-blue-600 underline">
+                        Learn more
+                      </a>
+                    </div>
+                  ) : null}
                 </div>
               </div>
             ))}
