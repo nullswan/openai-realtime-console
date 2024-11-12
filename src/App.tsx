@@ -1,26 +1,29 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ConsolePage } from './pages/ConsolePage';
-import ProfilePage from './pages/profile';
 import LearningPage from './pages/learning';
 import Roadmap from './pages/roadmap';
 import TellMeMore from './pages/tell-me-more';
 import './App.scss';
 import WhatToLearn from './pages/what-to-learn';
+import { GlobalRefsProvider } from './lib/wavtools/lib/realtime/client';
+import ProfilePage from './pages/profile';
 
 function App() {
   return (
     <div data-component="App">
-      <Router>
-        <Routes>
-          <Route path="/" element={<TellMeMore />} />
-          <Route path="/console" element={<ConsolePage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/learning/:subject/:priority" element={<LearningPage />} />
-          <Route path="/roadmap" element={<Roadmap />} />
-          <Route path="/tell-me-more" element={<TellMeMore />} />
-          <Route path="/what-to-learn" element={<WhatToLearn />} />
-        </Routes>
-      </Router>
+      <GlobalRefsProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<TellMeMore />} />
+            <Route path="/console" element={<ConsolePage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/learning/:subjectId/:priorityId" element={<LearningPage />} />
+            <Route path="/roadmap/:subjectId" element={<Roadmap />} />
+            <Route path="/tell-me-more" element={<TellMeMore />} />
+            <Route path="/what-to-learn" element={<WhatToLearn />} />
+          </Routes>
+        </Router>
+      </GlobalRefsProvider>
     </div>
   );
 }

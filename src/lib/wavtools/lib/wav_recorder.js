@@ -45,7 +45,7 @@ export class WavRecorder {
     this.eventReceipts = {};
     this.eventTimeout = 5000;
     // Process chunks of audio
-    this._chunkProcessor = () => {};
+    this._chunkProcessor = () => { };
     this._chunkProcessorSize = void 0;
     this._chunkProcessorBuffer = {
       raw: new ArrayBuffer(0),
@@ -321,7 +321,7 @@ export class WavRecorder {
       throw new Error('Could not start media stream');
     }
 
-    const context = new AudioContext({ sampleRate: this.sampleRate });
+    const context = new AudioContext();
     const source = context.createMediaStreamSource(this.stream);
     // Load and execute the module script.
     try {
@@ -367,8 +367,8 @@ export class WavRecorder {
       // eslint-disable-next-line no-console
       console.warn(
         'Warning: Output to speakers may affect sound quality,\n' +
-          'especially due to system audio feedback preventative measures.\n' +
-          'use only for debugging',
+        'especially due to system audio feedback preventative measures.\n' +
+        'use only for debugging',
       );
       analyser.connect(context.destination);
     }
@@ -431,7 +431,7 @@ export class WavRecorder {
    * @param {number} [chunkSize] chunkProcessor will not be triggered until this size threshold met in mono audio
    * @returns {Promise<true>}
    */
-  async record(chunkProcessor = () => {}, chunkSize = 8192) {
+  async record(chunkProcessor = () => { }, chunkSize = 8192) {
     if (!this.processor) {
       throw new Error('Session ended: please call .begin() first');
     } else if (this.recording) {

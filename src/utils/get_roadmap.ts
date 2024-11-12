@@ -7,7 +7,7 @@ Create a learning roadmap for the subject provided by the user, outlining struct
 
 Provide a learning plan divided into an array of tasks with explicit prioritization, each task including key information necessary for the user to progress effectively.
 Ensure that tasks cover beginner to advanced levels if applicable, include key resources, and offer practical applications to assist in mastering the topic.
-Generate 5 tasks. Be as concise as possible on the name, description and practical applications.
+Generate as many tasks as needed. Be as concise as possible on the name, description and practical applications.
 
 # Steps
 
@@ -32,7 +32,8 @@ The response should be formulated as a JSON object with the following keys:
             "description": "[Description of the task]",
             "key_concepts": ["[List of important concepts for this task]"],
             "resources": ["[Recommended books, courses, online resources]"],
-            "practical_applications": "[Exercises or real-world examples if applicable]"
+            "practical_applications": "[Exercises or real-world examples if applicable]",
+            "progress": "Not started"
         },
         {
             "priority": 2,
@@ -40,7 +41,8 @@ The response should be formulated as a JSON object with the following keys:
             "description": "[Description of the task]",
             "key_concepts": ["[List of important concepts for this task]"],
             "resources": ["[Recommended books, courses, online resources]"],
-            "practical_applications": "[Exercises or real-world examples if applicable]"
+            "practical_applications": "[Exercises or real-world examples if applicable]",
+            "progress": "Not started"
         }
         //... (additional tasks following the same structure ordered by priority)
     ]
@@ -62,7 +64,8 @@ The response should be formulated as a JSON object with the following keys:
             "description": "Learn the fundamentals of Python programming essential for data analysis.",
             "key_concepts": ["Python syntax", "Data types", "Control structures"],
             "resources": ["'Automate the Boring Stuff with Python' by Al Sweigart", "Online course: 'Python for Everybody' on Coursera"],
-            "practical_applications": "Write simple Python scripts to automate basic calculations and tasks."
+            "practical_applications": "Write simple Python scripts to automate basic calculations and tasks.",
+            "progress": "Not started"
         },
         {
             "priority": 2,
@@ -70,7 +73,8 @@ The response should be formulated as a JSON object with the following keys:
             "description": "Get familiar with key libraries used for data analysis in Python.",
             "key_concepts": ["Pandas basics", "NumPy for numerical operations"],
             "resources": ["'Python for Data Analysis' by Wes McKinney", "Online tutorial: 'Pandas Documentation Guide'"],
-            "practical_applications": "Practice using Pandas and NumPy to manipulate small datasets."
+            "practical_applications": "Practice using Pandas and NumPy to manipulate small datasets.",
+            "progress": "Not started"
         },
         {
             "priority": 3,
@@ -78,7 +82,8 @@ The response should be formulated as a JSON object with the following keys:
             "description": "Explore data visualization and analysis techniques.",
             "key_concepts": ["Matplotlib", "Seaborn", "Descriptive statistics"],
             "resources": ["Online course: 'Data Analysis with Python' on edX", "'Python Data Science Handbook' by Jake VanderPlas"],
-            "practical_applications": "Use visualizations to identify trends in datasets and interpret data using descriptive statistics."
+            "practical_applications": "Use visualizations to identify trends in datasets and interpret data using descriptive statistics.",
+            "progress": "Not started"
         }
         //... additional advanced tasks ordered by increasing priority
     ]
@@ -93,104 +98,163 @@ The response should be formulated as a JSON object with the following keys:
 `;
 
 // Define the Zod schema for the learning roadmap
+const KeyConcepts = z.object({
+  name: z.string(),
+  isLearned: z.boolean(),
+  description: z.string()
+});
+
 const Task = z.object({
-    priority: z.number(),
-    name: z.string(),
-    description: z.string(),
-    key_concepts: z.array(z.string()),
-    resources: z.array(z.string()),
-    practical_applications: z.string().optional(),
-  });
-  
+  priority: z.number(),
+  name: z.string(),
+  description: z.string(),
+  key_concepts: z.array(KeyConcepts),
+  resources: z.array(z.string()),
+  practical_applications: z.string().optional(),
+  image: z.string().optional(),
+  progress: z.string()
+});
+
 const LearningRoadmap = z.object({
-    subject: z.string(),
-    tasks: z.array(Task),
+  subject: z.string(),
+  tasks: z.array(Task)
 });
 
 const TEMPERATURE = 1.0;
 const TOP_P = 1.0;
 let last_call = new Date();
+let isFirstCall = true;
 
-interface Task {
-  priority: number;
-  name: string;
-  description: string;
-  key_concepts: string[];
-  resources: string[];
-  practical_applications?: string;
-  image?: string;
-  progress: boolean;
-}
-
-interface RoadmapResponse {
-  subject: string;
-  tasks: Task[];
-}
+interface KeyConcepts {
+    name: string;
+    isLearned: boolean;
+    description: string;
+  }
+  
+  interface Task {
+    priority: number;
+    name: string;
+    description: string;
+    key_concepts: KeyConcepts[];
+    resources: string[];
+    practical_applications?: string;
+    image?: string;
+    progress: string;
+  }
+  
+  interface RoadmapResponse {
+    subject: string;
+    tasks: Task[];
+  }
 
 export async function getRoadmap(apiKey: string, request: string, setResponse: (response: RoadmapResponse) => void): Promise<RoadmapResponse> {
-  // Rate limiting check
+    // Modified rate limiting check
   const perf = performance.now();
-  if (new Date().getTime() - last_call.getTime() < 3000) {
-    return { subject: "", tasks: [] };
+  if (!isFirstCall && new Date().getTime() - last_call.getTime() < 100) {
+    throw new Error('Please wait a few seconds before making another request');
   }
+  isFirstCall = false;
   last_call = new Date();
 
   const client = new OpenAI({ apiKey: apiKey, dangerouslyAllowBrowser: true });
   console.log("getRoadmap", request);
 
-  const stream = await client.chat.completions.create({
-    model: "gpt-4o-mini",
-    messages: [
-      { role: "system", content: learningRoadmapTemplate },
-      { role: "user", content: request }
-    ],
-    response_format: zodResponseFormat(LearningRoadmap, "learning_roadmap"),
-    temperature: TEMPERATURE,
-    top_p: TOP_P,
-    stream: true,
-  });
-
-  let fullContent = '';
-  let currentResponse: Partial<RoadmapResponse> = { subject: '', tasks: [] };
-  
-  for await (const chunk of stream) {
-    const content = chunk.choices[0]?.delta?.content || '';
-    fullContent += content;
-    
-    // Try to parse the accumulated content as JSON
-    try {
-      // Remove any trailing commas and complete the JSON structure if needed
-      let parseableContent = fullContent;
-      if (!parseableContent.endsWith('}')) {
-        parseableContent = parseableContent.replace(/,\s*$/, '') + '}]}';
-      }
-      
-      const partialResponse = JSON.parse(parseableContent) as RoadmapResponse;
-      
-      // Update the current response
-      if (partialResponse.subject) {
-        currentResponse.subject = partialResponse.subject;
-      }
-      if (partialResponse.tasks?.length > 0) {
-        setResponse(partialResponse);
-        currentResponse.tasks = partialResponse.tasks;
-      }
-    } catch (error) {
-      // Continue accumulating if parsing fails
-      continue;
-    }
-  }
-
-  console.log("getRoadmap", performance.now() - perf, "ms taken");
-  
-  // Return the accumulated response if it has content, otherwise try parsing the full content
-  if (currentResponse.subject && currentResponse.tasks && currentResponse.tasks.length > 0) {
-    return currentResponse as RoadmapResponse;
-  }
-
   try {
-    return JSON.parse(fullContent) as RoadmapResponse;
-  } catch (error) {
-    return { subject: '', tasks: [] };
+    const stream = await client.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: learningRoadmapTemplate },
+        { role: "user", content: request }
+      ],
+      response_format: zodResponseFormat(LearningRoadmap, "learning_roadmap"),
+      temperature: TEMPERATURE,
+      top_p: TOP_P,
+      stream: true,
+    });
+
+    let fullContent = '';
+    let currentResponse: Partial<RoadmapResponse> = { subject: '', tasks: [] };
+    
+    try {
+      for await (const chunk of stream) {
+        const content = chunk.choices[0]?.delta?.content || '';
+        fullContent += content;
+        
+        try {
+          // Remove any trailing commas and complete the JSON structure if needed
+          let parseableContent = fullContent;
+          if (!parseableContent.endsWith('}')) {
+            parseableContent = parseableContent.replace(/,\s*$/, '') + '}]}';
+          }
+          
+          const partialResponse = JSON.parse(parseableContent) as RoadmapResponse;
+          
+          if (partialResponse.subject) {
+            try {
+              const existingSubjects = JSON.parse(localStorage.getItem('subjects') || '[]');
+              if (!existingSubjects.includes(partialResponse.subject)) {
+                existingSubjects.push(partialResponse.subject);
+                localStorage.setItem('subjects', JSON.stringify(existingSubjects));
+              }
+              currentResponse.subject = partialResponse.subject;
+            } catch (storageError) {
+              console.error('LocalStorage error:', storageError);
+              // Continue execution even if localStorage fails
+            }
+          }
+
+          if (partialResponse.tasks?.length > 0) {
+            const subject = currentResponse.subject;
+            try {
+              localStorage.setItem(`${subject}`, JSON.stringify(partialResponse));
+            } catch (storageError) {
+              console.error('LocalStorage error:', storageError);
+            }
+            setResponse(partialResponse);
+            currentResponse.tasks = partialResponse.tasks;
+          }
+        } catch (parseError) {
+          // Continue accumulating if parsing fails
+          continue;
+        }
+      }
+    } catch (streamError) {
+      console.error('Stream processing error:', streamError);
+      throw new Error('Error processing the AI response stream');
+    }
+
+    console.log("getRoadmap", performance.now() - perf, "ms taken");
+    
+    // Return the accumulated response if it has content
+    if (currentResponse.subject && currentResponse.tasks && currentResponse.tasks.length > 0) {
+      return currentResponse as RoadmapResponse;
+    }
+
+    // Try parsing the full content as a last resort
+    try {
+      return JSON.parse(fullContent) as RoadmapResponse;
+    } catch (parseError) {
+      throw new Error('Failed to parse AI response');
+    }
+
+  } catch (error: any) {
+    // Handle specific OpenAI API errors
+    if (error?.status === 401) {
+      throw new Error('Invalid API key. Please check your OpenAI API key');
+    } else if (error?.status === 429) {
+      throw new Error('Rate limit exceeded. Please try again later');
+    } else if (error?.status === 500) {
+      throw new Error('OpenAI service error. Please try again later');
+    } else if (error?.status === 503) {
+      throw new Error('OpenAI service is temporarily unavailable');
+    }
+
+    // Handle network errors
+    if (error instanceof TypeError && error.message === 'Failed to fetch') {
+      throw new Error('Network error. Please check your internet connection');
+    }
+
+    // Throw the original error message or a generic one
+    throw new Error(error?.message || 'An unexpected error occurred');
   }
 }
