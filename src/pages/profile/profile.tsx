@@ -1,5 +1,5 @@
-	import {Map} from '../components/Map';
-	import { Coordinates } from './ConsolePage';
+	import {Map} from '../../components/Map';
+	import { Coordinates } from '../ConsolePage';
 
 	interface ProfileProps {
 	marker: Coordinates | null,
@@ -11,7 +11,7 @@
 	return (
 		<div className="content-right">
 		<div className="content-block map">
-		<div className="content-block-title">Profile</div>
+		<div className="content-block-title">Prosqdqsdqsdqsdqsfile</div>
 		<div className="content-block-title bottom">
 			{marker?.location || 'not yet retrieved'}
 			{!!marker?.temperature && (
