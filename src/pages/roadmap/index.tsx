@@ -139,6 +139,7 @@ export default function Component() {
                           onClick={() => {
                             // Handle task progress here
                             console.log(`Starting task: ${task.name}`);
+                            // handle the logic of starting a task with a quiz
                           }}
                         >
                           {task.progress ? 'Continue' : 'Start'}

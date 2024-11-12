@@ -2,10 +2,12 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { ArrowUp, Headphones } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Component() {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
+  const navigate = useNavigate();
   const messagesEndRef = useRef(null);
 
   const addMessage = (newMessage) => {
@@ -14,7 +16,9 @@ export default function Component() {
 
   useEffect(() => {
     setMessages([]);
-    const informations = JSON.parse(localStorage.getItem('informations') || '[]');
+    const informations = JSON.parse(
+      localStorage.getItem('informations') || '[]'
+    );
     for (const info of informations) {
       addMessage(info);
     }
@@ -26,7 +30,9 @@ export default function Component() {
       setMessage('');
 
       // Add to the local storage, as an array of informations
-      const informations = JSON.parse(localStorage.getItem('informations') || '[]');
+      const informations = JSON.parse(
+        localStorage.getItem('informations') || '[]'
+      );
       informations.push(message);
       localStorage.setItem('informations', JSON.stringify(informations));
       console.log(localStorage.getItem('informations'));
@@ -35,12 +41,13 @@ export default function Component() {
 
   const handleAudio = () => {
     // Simulating audio input
-    const audioMessage = "Audio message placeholder";
+    const audioMessage = 'Audio message placeholder';
     addMessage(audioMessage);
     console.log('Audio button clicked');
   };
 
   const handleFinalSubmit = () => {
+    navigate('/what-to-learn');
     console.log('Final submission with all messages:', messages);
   };
 
