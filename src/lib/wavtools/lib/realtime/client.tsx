@@ -57,6 +57,7 @@ export const GlobalRefsProvider: React.FC<GlobalRefsProviderProps> = ({ children
     await client.connect();
     client.updateSession({
       instructions,
+      tool_choice: 'auto',
     })
 
     for (const tool of tools || []) {
