@@ -32,7 +32,8 @@ The response should be formulated as a JSON object with the following keys:
             "description": "[Description of the task]",
             "key_concepts": ["[List of important concepts for this task]"],
             "resources": ["[Recommended books, courses, online resources]"],
-            "practical_applications": "[Exercises or real-world examples if applicable]"
+            "practical_applications": "[Exercises or real-world examples if applicable]",
+            "progress": "Not started"
         },
         {
             "priority": 2,
@@ -40,7 +41,8 @@ The response should be formulated as a JSON object with the following keys:
             "description": "[Description of the task]",
             "key_concepts": ["[List of important concepts for this task]"],
             "resources": ["[Recommended books, courses, online resources]"],
-            "practical_applications": "[Exercises or real-world examples if applicable]"
+            "practical_applications": "[Exercises or real-world examples if applicable]",
+            "progress": "Not started"
         }
         //... (additional tasks following the same structure ordered by priority)
     ]
@@ -62,7 +64,8 @@ The response should be formulated as a JSON object with the following keys:
             "description": "Learn the fundamentals of Python programming essential for data analysis.",
             "key_concepts": ["Python syntax", "Data types", "Control structures"],
             "resources": ["'Automate the Boring Stuff with Python' by Al Sweigart", "Online course: 'Python for Everybody' on Coursera"],
-            "practical_applications": "Write simple Python scripts to automate basic calculations and tasks."
+            "practical_applications": "Write simple Python scripts to automate basic calculations and tasks.",
+            "progress": "Not started"
         },
         {
             "priority": 2,
@@ -70,7 +73,8 @@ The response should be formulated as a JSON object with the following keys:
             "description": "Get familiar with key libraries used for data analysis in Python.",
             "key_concepts": ["Pandas basics", "NumPy for numerical operations"],
             "resources": ["'Python for Data Analysis' by Wes McKinney", "Online tutorial: 'Pandas Documentation Guide'"],
-            "practical_applications": "Practice using Pandas and NumPy to manipulate small datasets."
+            "practical_applications": "Practice using Pandas and NumPy to manipulate small datasets.",
+            "progress": "Not started"
         },
         {
             "priority": 3,
@@ -78,7 +82,8 @@ The response should be formulated as a JSON object with the following keys:
             "description": "Explore data visualization and analysis techniques.",
             "key_concepts": ["Matplotlib", "Seaborn", "Descriptive statistics"],
             "resources": ["Online course: 'Data Analysis with Python' on edX", "'Python Data Science Handbook' by Jake VanderPlas"],
-            "practical_applications": "Use visualizations to identify trends in datasets and interpret data using descriptive statistics."
+            "practical_applications": "Use visualizations to identify trends in datasets and interpret data using descriptive statistics.",
+            "progress": "Not started"
         }
         //... additional advanced tasks ordered by increasing priority
     ]
@@ -100,6 +105,7 @@ const Task = z.object({
     key_concepts: z.array(z.string()),
     resources: z.array(z.string()),
     practical_applications: z.string().optional(),
+    progress: z.string(),
   });
   
 const LearningRoadmap = z.object({
@@ -120,7 +126,7 @@ interface Task {
   resources: string[];
   practical_applications?: string;
   image?: string;
-  progress: boolean;
+  progress: string;
 }
 
 interface RoadmapResponse {
@@ -129,7 +135,7 @@ interface RoadmapResponse {
 }
 
 export async function getRoadmap(apiKey: string, request: string, setResponse: (response: RoadmapResponse) => void): Promise<RoadmapResponse> {
-  // Modified rate limiting check
+    // Modified rate limiting check
   const perf = performance.now();
   if (!isFirstCall && new Date().getTime() - last_call.getTime() < 3000) {
     throw new Error('Please wait a few seconds before making another request');
