@@ -5,7 +5,9 @@ import { zodResponseFormat } from 'openai/helpers/zod';
 const learningRoadmapTemplate: string = `
 Create a learning roadmap for the subject provided by the user, outlining structured tasks to achieve a deep understanding of their desired topic, ordered by priority.
 
-Provide a learning plan divided into an array of tasks with explicit prioritization, each task including key information necessary for the user to progress effectively. Ensure that tasks cover beginner to advanced levels if applicable, include key resources, and offer practical applications to assist in mastering the topic.
+Provide a learning plan divided into an array of tasks with explicit prioritization, each task including key information necessary for the user to progress effectively.
+Ensure that tasks cover beginner to advanced levels if applicable, include key resources, and offer practical applications to assist in mastering the topic.
+Generate 5 tasks. Be as concise as possible on the name, description and practical applications.
 
 # Steps
 
@@ -109,17 +111,34 @@ const TEMPERATURE = 1.0;
 const TOP_P = 1.0;
 let last_call = new Date();
 
-export async function getRoadmap(apiKey: string, request: string) {
-    // If the last call was less than 3 seconds ago, return
+interface Task {
+  priority: number;
+  name: string;
+  description: string;
+  key_concepts: string[];
+  resources: string[];
+  practical_applications?: string;
+  image?: string;
+  progress: boolean;
+}
+
+interface RoadmapResponse {
+  subject: string;
+  tasks: Task[];
+}
+
+export async function getRoadmap(apiKey: string, request: string, setResponse: (response: RoadmapResponse) => void): Promise<RoadmapResponse> {
+  // Rate limiting check
+  const perf = performance.now();
   if (new Date().getTime() - last_call.getTime() < 3000) {
-    return;
+    return { subject: "", tasks: [] };
   }
   last_call = new Date();
 
   const client = new OpenAI({ apiKey: apiKey, dangerouslyAllowBrowser: true });
   console.log("getRoadmap", request);
 
-  const response = await client.chat.completions.create({
+  const stream = await client.chat.completions.create({
     model: "gpt-4o-mini",
     messages: [
       { role: "system", content: learningRoadmapTemplate },
@@ -128,10 +147,50 @@ export async function getRoadmap(apiKey: string, request: string) {
     response_format: zodResponseFormat(LearningRoadmap, "learning_roadmap"),
     temperature: TEMPERATURE,
     top_p: TOP_P,
+    stream: true,
   });
 
-  console.log(response);
+  let fullContent = '';
+  let currentResponse: Partial<RoadmapResponse> = { subject: '', tasks: [] };
+  
+  for await (const chunk of stream) {
+    const content = chunk.choices[0]?.delta?.content || '';
+    fullContent += content;
+    
+    // Try to parse the accumulated content as JSON
+    try {
+      // Remove any trailing commas and complete the JSON structure if needed
+      let parseableContent = fullContent;
+      if (!parseableContent.endsWith('}')) {
+        parseableContent = parseableContent.replace(/,\s*$/, '') + '}]}';
+      }
+      
+      const partialResponse = JSON.parse(parseableContent) as RoadmapResponse;
+      
+      // Update the current response
+      if (partialResponse.subject) {
+        currentResponse.subject = partialResponse.subject;
+      }
+      if (partialResponse.tasks?.length > 0) {
+        setResponse(partialResponse);
+        currentResponse.tasks = partialResponse.tasks;
+      }
+    } catch (error) {
+      // Continue accumulating if parsing fails
+      continue;
+    }
+  }
 
-  // Return the parsed response
-  return response.choices[0].message.content;
+  console.log("getRoadmap", performance.now() - perf, "ms taken");
+  
+  // Return the accumulated response if it has content, otherwise try parsing the full content
+  if (currentResponse.subject && currentResponse.tasks && currentResponse.tasks.length > 0) {
+    return currentResponse as RoadmapResponse;
+  }
+
+  try {
+    return JSON.parse(fullContent) as RoadmapResponse;
+  } catch (error) {
+    return { subject: '', tasks: [] };
+  }
 }

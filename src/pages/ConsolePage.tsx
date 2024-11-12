@@ -445,7 +445,7 @@ export function ConsolePage() {
             placeholder="Type and press Enter"
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
-                getRoadmap(apiKey, e.currentTarget.value);
+                // getRoadmap(apiKey, e.currentTarget.value);
                 e.currentTarget.value = '';
               }
             }}
