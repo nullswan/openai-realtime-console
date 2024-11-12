@@ -54,6 +54,10 @@ export const GlobalRefsProvider: React.FC<GlobalRefsProviderProps> = ({ children
     // Connect to audio output
     await wavStreamPlayer.connect();
 
+    if (client.isConnected()) {
+      return;
+    }
+
     await client.connect();
     client.updateSession({
       instructions,
@@ -64,6 +68,8 @@ export const GlobalRefsProvider: React.FC<GlobalRefsProviderProps> = ({ children
       client.addTool(tool.config, tool.callback);
     }
 
+    console.log('Adding event listeners...');
+
     client.on('conversation.interrupted', async () => {
       const trackSampleOffset = await wavStreamPlayer.interrupt();
       if (trackSampleOffset?.trackId) {
@@ -72,6 +78,8 @@ export const GlobalRefsProvider: React.FC<GlobalRefsProviderProps> = ({ children
       }
     });
     client.on('conversation.updated', async ({ item, delta }: any) => {
+      if (delta?.transcript)
+        console.log(delta?.transcript)
       if (delta?.audio) {
         wavStreamPlayer.add16BitPCM(delta.audio, item.id);
       }
