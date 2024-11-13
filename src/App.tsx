@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ConsolePage } from './pages/ConsolePage';
 import LearningPage from './pages/learning';
 import Roadmap from './pages/roadmap';
@@ -9,13 +9,17 @@ import SearchPage from './pages/search';
 import { GlobalRefsProvider } from './lib/wavtools/lib/realtime/client';
 import ProfilePage from './pages/profile';
 
+function RedirectBasedOnStorage() {
+  return localStorage.getItem('informations') ? <Navigate to="/search" /> : <Navigate to="/tell-me-more" />;
+}
+
 function App() {
   return (
     <div data-component="App">
       <GlobalRefsProvider>
         <Router>
           <Routes>
-            <Route path="/" element={<TellMeMore />} />
+            <Route path="/" element={<RedirectBasedOnStorage />} />
             <Route path="/console" element={<ConsolePage />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/profile" element={<ProfilePage />} />
