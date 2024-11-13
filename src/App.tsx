@@ -9,6 +9,7 @@ import SearchPage from './pages/search';
 import { GlobalRefsProvider } from './lib/wavtools/lib/realtime/client';
 import ProfilePage from './pages/profile';
 import Discover from './pages/discover';
+import G from './pages/g';
 
 function RedirectBasedOnStorage() {
   return localStorage.getItem('informations') ? <Navigate to="/search" /> : <Navigate to="/tell-me-more" />;
@@ -25,6 +26,7 @@ function App() {
             <Route path="/tell-me-more" element={<TellMeMore />} />
             <Route path="/what-to-learn" element={<WhatToLearn />} />
             <Route path="/discover/:subjectId" element={<Discover />} />
+            <Route path="/g/:subjectId" element={<G />} />
             {/* Legacy components */}
             <Route path="/console" element={<ConsolePage />} />
             <Route path="/profile" element={<ProfilePage />} />
