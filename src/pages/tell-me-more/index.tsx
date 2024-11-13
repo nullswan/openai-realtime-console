@@ -7,8 +7,10 @@ import { useNavigate } from 'react-router-dom';
 import { ToolsT } from '../../lib/wavtools/lib/realtime/event';
 import { tellMorePrompt } from './prompt';
 
+const maxMessages = 5;
+
 // TODO: Add the header bar
-export default function Component() {
+export default function TellMeMore() {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<string[]>([]);
   const messagesEndRef = useRef(null);
@@ -137,17 +139,17 @@ export default function Component() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-2xl mx-auto space-y-6">
-        <div className="relative">
+        <div className={`relative transition-all duration-500 transform ${messages.length > 0 ? 'pb-24' : ''}`}>
           <div className="space-y-6 mb-6 max-h-[60vh] overflow-y-auto">
             {messages.length === 0 && (
               <div className="text-lg font-semibold text-center">
                 Tell me more about you
               </div>
             )}
-            {messages.slice(-3).map((msg, index) => (
+            {messages.slice(-maxMessages).map((msg, index) => (
               <div
                 key={index}
-                className="space-y-2 transition-all duration-300 transform"
+                className="space-y-2 transition-all duration-500 transform"
               >
                 <div className="text-sm text-gray-500 text-right">
                   Memory updated
@@ -160,7 +162,7 @@ export default function Component() {
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="relative">
+          <div className={`relative transition-all duration-1000 ${messages.length > 0 ? 'fixed bottom-0 w-full max-w-2xl mx-auto' : ''}`}>
             <input
               type="text"
               placeholder="Type your message.."
@@ -196,6 +198,6 @@ export default function Component() {
           </div>
         )}
       </div>
-    </div>
+    </div >
   );
 }
