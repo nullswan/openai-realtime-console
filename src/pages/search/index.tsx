@@ -17,7 +17,7 @@ export default function Search() {
       title: 'Prime number discovery',
       description:
         'A former Nvidia employee has discovered the largest known prime number, 2^82,579,841 - 1',
-      image: '1.png',
+      image: '4.png',
       author: 'esafar',
       likes: '1.1K',
       profile_img:
@@ -27,7 +27,7 @@ export default function Search() {
       title: 'Python ML course',
       description:
         'Python was named after the British comedy troupe Monty Python, not the snake. Its creator, Guido van Rossum...',
-      image: '2.png',
+      image: '7.png',
       author: 'jperrama',
       likes: '3.4K',
       profile_img:

@@ -438,7 +438,7 @@ export function ConsolePage() {
       <div className="content-top">
         <div className="content-title">
           <img src="/openai-logomark.svg" />
-          <span>realtime console</span>
+          <span>ChatGPT</span>
           <input
             type="text"
             placeholder="Type and press Enter"

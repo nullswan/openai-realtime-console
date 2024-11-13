@@ -161,8 +161,8 @@ const MOCK_CONTENT: Record<string, TopicResponse> = {
       },
     ],
     images: [
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIcBbGo5FZUXE5xukkNMiu_lv4L5DOywDlKA&s',
-      'https://m.media-amazon.com/images/I/71o+UlqkwdL._AC_UF894,1000_QL80_.jpg',
+      '8.png',
+      '9.png',
     ],
     links: [
       'https://www.perplexity.ai/search/new?q=Python+Machine+Learning',
@@ -242,7 +242,7 @@ export default function Discover() {
           {content.images.map((src, i) => (
             <img
               key={i}
-              src={src}
+              src={`/img/${src}`}
               alt={`Illustration ${i + 1}`}
               className="rounded-lg shadow-md w-full aspect-video object-cover"
             />
