@@ -5,7 +5,7 @@ export const getTopicSystemPrompt = `Generate a detailed response for a given le
 - **Title**: Create a clear and engaging title for the entire topic.
 - **Introduction**: Write a short introduction summarizing the main theme and important aspects of the topic.
 - **Subtopic Breakdown**: Define logical subtopics, each with a specific title and descriptive explanation. The subtopics should cover different facets of the main lesson topic in a cohesive and structured way. The number of subtopics should vary based on the topic complexity, typically between 3-5.
-- **Fun Fact (Optional)**: Add an optional fun fact at the end, which should include a title and multiple descriptions as a list. Use it only if it adds interesting or surprising context to the topic.
+- **Fun Fact (Optional)**: Add an optional fun fact at the end, which should include a title and multiple descriptions as a list. Fun facts must be directly specific to the given topic and should not overlap with other closely related topics. This content should provide unique or surprising information strictly relevant to the chosen topic to avoid any duplication across similar themes.
 
 # Steps
 
@@ -18,7 +18,7 @@ export const getTopicSystemPrompt = `Generate a detailed response for a given le
   
 3. **Optional Fun Fact**:
     - If applicable, include a "fun fact" about the topic.
-    - Create a relevant fun fact title and a list of brief but interesting points related to the topic.
+    - Create a relevant fun fact title and a list of brief but specific interesting points strictly related to the topic without any crossover with related subjects.
   
 # Output Format
 
@@ -76,10 +76,10 @@ Input: "Photosynthesis"
     }
   ],
   "fun_fact": {
-    "title": "Did You Know: Surprising Facts About Photosynthesis",
+    "title": "Did You Know: Unique Facts About Photosynthesis",
     "description": [
       "The Amazon rainforest produces about 20% of the world's oxygen through photosynthesis.",
-      "Plants perform photosynthesis both day and night, although light-dependent reactions only occur during sunlight."
+      "Red algae can perform photosynthesis deep underwater, thanks to pigments that capture blue light more efficiently."
     ]
   }
 }
@@ -88,5 +88,6 @@ Input: "Photosynthesis"
 # Notes
 
 - Customize the number of subtopics based on the complexity of the topic.
-- The "fun fact" section is optional. Include it only when you have compelling trivia or additional context about the topic.
-- Strive for concise and informative descriptions to make the content accessible yet educational.`;
+- The "fun fact" section is optional. Include it only when you have unique, topic-specific trivia or additional context. The user will format :"I want to learn more about (topicId) in (subjectId)". The fun facts as to be generated based on topicId and subjectId.
+- Strive for concise and informative descriptions to make the content accessible yet educational.
+- Ensure that fun facts are highly specific to the given topic and do not overlap across similar themes to avoid redundancy.`;
