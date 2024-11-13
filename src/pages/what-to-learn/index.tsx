@@ -92,12 +92,9 @@ export default function Component() {
 
   const handleSubmit = async (value?: string) => {
     const submitValue = value !== undefined ? value : inputValue;
+    setInputValue(submitValue);
     if (submitValue) {
-      try {
-        const roadmapData = await getRoadmap(apiKey, submitValue, setRoadmap);
-      } catch (error) {
-        console.error('Error fetching roadmap:', error);
-      }
+      navigate(`/discover/` + encodeURIComponent(submitValue));
     }
   };
 
