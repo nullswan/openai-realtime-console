@@ -9,23 +9,28 @@ import { tellMorePrompt } from './prompt';
 
 const maxMessages = 5;
 
-// TODO: Add the header bar
 export default function TellMeMore() {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<string[]>([]);
   const messagesEndRef = useRef(null);
   const globalRefs = useContext(GlobalRefsContext);
   const navigate = useNavigate();
+  const [isFirstMessage, setIsFirstMessage] = useState(true);
 
   const addMessage = (newMessage: string): void => {
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
+    setMessages((prevMessages) => {
+      const updatedMessages = [...prevMessages, newMessage];
+      if (isFirstMessage) setIsFirstMessage(false);
+      return updatedMessages;
+    });
   };
-
   const addPreference = (key: string, value: string): void => {
-    const preferences = JSON.parse(localStorage.getItem('informations') || '[]');
+    const preferences = JSON.parse(
+      localStorage.getItem('informations') || '[]'
+    );
     preferences.push({ key, value });
     localStorage.setItem('informations', JSON.stringify(preferences));
-  }
+  };
 
   const setName = (name: string) => {
     addMessage(`username = ${name}`);
@@ -35,15 +40,13 @@ export default function TellMeMore() {
   const handleSubmit = () => {
     if (message.trim()) {
       setMessage('');
-      if (globalRefs)
-        globalRefs.addMessage(message);
+      if (globalRefs) globalRefs.addMessage(message);
     }
   };
 
   const handleAudio = () => {
     console.log('Audio button clicked');
-    if (globalRefs)
-      globalRefs.startRecording();
+    if (globalRefs) globalRefs.startRecording();
   };
 
   const handleFinalSubmit = () => {
@@ -53,7 +56,7 @@ export default function TellMeMore() {
 
   const initiateConversation = async (
     instructions: string,
-    tools: ToolsT[],
+    tools: ToolsT[]
   ) => {
     if (globalRefs) {
       await globalRefs.connectConversation(instructions, tools);
@@ -61,63 +64,60 @@ export default function TellMeMore() {
   };
 
   const startCallback = async () => {
-    await initiateConversation(
-      tellMorePrompt,
-      [
-        {
-          config: {
-            name: 'set_memory',
-            description: 'Saves important data about the user into memory.',
-            parameters: {
-              type: 'object',
-              properties: {
-                key: {
-                  type: 'string',
-                  description:
-                    'The key of the memory value. Always use lowercase and underscores, no other characters.',
-                },
-                value: {
-                  type: 'string',
-                  description: 'Value can be anything represented as a string',
-                },
+    await initiateConversation(tellMorePrompt, [
+      {
+        config: {
+          name: 'set_memory',
+          description: 'Saves important data about the user into memory.',
+          parameters: {
+            type: 'object',
+            properties: {
+              key: {
+                type: 'string',
+                description:
+                  'The key of the memory value. Always use lowercase and underscores, no other characters.',
               },
-              required: ['key', 'value'],
-            },
-          },
-          callback: async ({ key, value }: { [key: string]: any }) => {
-            addMessage(`${key} = ${value}`);
-            addPreference(key, value);
-            return { ok: true };
-          },
-        }, {
-          config: {
-            name: 'set_name',
-            description: 'Saves the user\'s name into memory.',
-            parameters: {
-              type: 'object',
-              properties: {
-                key: {
-                  type: 'string',
-                  description:
-                    'The key of the memory value. Always name.',
-                },
-                value: {
-                  type: 'string',
-                  description: 'The user\'s name.',
-                },
+              value: {
+                type: 'string',
+                description: 'Value can be anything represented as a string',
               },
-              required: ['key', 'value'],
             },
+            required: ['key', 'value'],
           },
-          callback: async ({ key, value }: { [key: string]: any }) => {
-            setName(value);
-            return { ok: true };
-          }
-        }
-      ]
-    );
+        },
+        callback: async ({ key, value }: { [key: string]: any }) => {
+          addMessage(`${key} = ${value}`);
+          addPreference(key, value);
+          return { ok: true };
+        },
+      },
+      {
+        config: {
+          name: 'set_name',
+          description: "Saves the user's name into memory.",
+          parameters: {
+            type: 'object',
+            properties: {
+              key: {
+                type: 'string',
+                description: 'The key of the memory value. Always name.',
+              },
+              value: {
+                type: 'string',
+                description: "The user's name.",
+              },
+            },
+            required: ['key', 'value'],
+          },
+        },
+        callback: async ({ key, value }: { [key: string]: any }) => {
+          setName(value);
+          return { ok: true };
+        },
+      },
+    ]);
 
-    globalRefs.addMessage('Hey! I\'m a new user. Let\'s get started!');
+    globalRefs.addMessage("Hey! I'm a new user. Let's get started!");
   };
 
   useEffect(() => {
@@ -139,7 +139,7 @@ export default function TellMeMore() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-2xl mx-auto space-y-6">
-        <div className={`relative transition-all duration-500 transform ${messages.length > 0 ? 'pb-24' : ''}`}>
+        <div className="relative transition-all duration-500">
           <div className="space-y-6 mb-6 max-h-[60vh] overflow-y-auto">
             {messages.length === 0 && (
               <div className="text-lg font-semibold text-center">
@@ -149,7 +149,7 @@ export default function TellMeMore() {
             {messages.slice(-maxMessages).map((msg, index) => (
               <div
                 key={index}
-                className="flex flex-col items-end space-y-2 transition-all duration-500 transform"
+                className="flex flex-col items-end space-y-2 animate-fade-in"
               >
                 <div className="flex items-center space-x-2 bg-white-100 text-gray-600 text-sm p-2 rounded-3xl">
                   <BookOpenIcon className="w-4 h-4" />
@@ -163,7 +163,16 @@ export default function TellMeMore() {
             <div ref={messagesEndRef} />
           </div>
 
-          <div className={`relative transition-all duration-1000 ${messages.length > 0 ? 'fixed bottom-0 w-full max-w-2xl mx-auto' : ''}`}>
+          <div
+            className={`
+              transition-all duration-700 ease-in-out transform
+              ${
+                isFirstMessage
+                  ? 'relative'
+                  : 'fixed bottom-0 left-0 right-0 max-w-2xl mx-auto px-4 pb-6 bg-white'
+              }
+            `}
+          >
             <input
               type="text"
               placeholder="Type your message.."
@@ -176,7 +185,7 @@ export default function TellMeMore() {
                 }
               }}
             />
-            <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+            <div className={`absolute flex items-center gap-1 ${!isFirstMessage ? "top-[35%] -translate-y-1/2 right-6" : "right-2 top-1/2 -translate-y-1/2"}`}>
               <button
                 onClick={handleAudio}
                 className="p-2 hover:bg-gray-100 rounded-full transition-colors"
@@ -199,6 +208,6 @@ export default function TellMeMore() {
           </div>
         )}
       </div>
-    </div >
+    </div>
   );
 }
