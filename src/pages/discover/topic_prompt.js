@@ -38,6 +38,11 @@ Provide the response in the JSON format below:
     },
     ...
   ],
+  "links": [
+    "https://www.perplexity.ai/search/new?q=Subtopic%20title%20",
+    "https://www.perplexity.ai/search/new?q=Subtopic%20title%20",
+    "https://www.perplexity.ai/search/new?q=Subtopic%20title%20"
+  ],
   "fun_fact": {
     "title": "[Optional fun fact title]",
     "description": [
@@ -79,8 +84,8 @@ Input: "Photosynthesis"
     "title": "Did You Know: Unique Facts About Photosynthesis",
     "description": [
       "The Amazon rainforest produces about 20% of the world's oxygen through photosynthesis.",
-      "Red algae can perform photosynthesis deep underwater, thanks to pigments that capture blue light more efficiently."
-    ]
+      "Plants perform photosynthesis both day and night, although light-dependent reactions only occur during sunlight."
+    ],
   }
 }
 \`\`\`
