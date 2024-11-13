@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useContext } from 'react';
-import { Headphones } from 'lucide-react';
+import { BookOpenIcon, Headphones } from 'lucide-react';
 import { GlobalRefsContext } from '../../lib/wavtools/lib/realtime/client';
 import { useNavigate } from 'react-router-dom';
 import { ToolsT } from '../../lib/wavtools/lib/realtime/event';
@@ -149,12 +149,13 @@ export default function TellMeMore() {
             {messages.slice(-maxMessages).map((msg, index) => (
               <div
                 key={index}
-                className="space-y-2 transition-all duration-500 transform"
+                className="flex flex-col items-end space-y-2 transition-all duration-500 transform"
               >
-                <div className="text-sm text-gray-500 text-right">
-                  Memory updated
+                <div className="flex items-center space-x-2 bg-white-100 text-gray-600 text-sm p-2 rounded-3xl">
+                  <BookOpenIcon className="w-4 h-4" />
+                  <span>Memory updated</span>
                 </div>
-                <div className="bg-gray-50 rounded-2xl p-4 break-words">
+                <div className="bg-gray-50 rounded-3xl p-4 break-words w-full max-w-md text-right">
                   {msg}
                 </div>
               </div>
