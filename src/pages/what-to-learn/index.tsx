@@ -103,7 +103,7 @@ export default function Component() {
 
   const handleStartRoadmap = () => {
     if (roadmap) {
-      navigate(`/roadmap/${encodeURIComponent(roadmap.subject)}`);
+      navigate(`/discover/${encodeURIComponent(roadmap.subject)}`);
     }
   };
 
