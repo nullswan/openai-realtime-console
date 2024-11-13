@@ -203,54 +203,59 @@ export default function Discover() {
         ) : contents.length > 0 ? (
           <div className="max-w-3xl mx-auto px-4 space-y-12">
             {contents.map((content, contentIndex) => (
-              <div key={contentIndex} className="space-y-8">
-                <h1 className="text-2xl font-bold">{content.title}</h1>
+              <div key={contentIndex}>
+                <div className="space-y-8">
+                  <h1 className="text-2xl font-bold">{content.title}</h1>
 
-                <div className="flex items-center gap-2 justify-start">
-                  <img src="/logo.svg" alt="" />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {images.map((src, index) => (
-                    <img
-                      key={index}
-                      src={src}
-                      alt={`${content.title} illustration ${index + 1}`}
-                      className="aspect-[4/3] rounded-lg shadow-md object-cover"
-                    />
-                  ))}
-                </div>
-
-                {/* Introduction */}
-                <div className="space-y-4">
-                  <h4 className="text-lg font-medium">
-                    Introduction à {content.title}
-                  </h4>
-                  <p className="text-gray-600 leading-relaxed">
-                    {content.introduction}
-                  </p>
-                </div>
-
-                {/* Subtopics */}
-                { content.subtopics && content.subtopics.map((subtopic, index) => (
-                  <div key={index} className="space-y-4">
-                    <h3 className="text-xl font-semibold">{subtopic.title}</h3>
-                    <p className="text-gray-600 leading-relaxed">
-                      {subtopic.description}
-                    </p>
+                  <div className="flex items-center gap-2 justify-start">
+                    <img src="/logo.svg" alt="" />
                   </div>
-                ))}
 
-                {/* Fun Fact */}
-                {content.fun_fact && content.fun_fact && (
-                  <div className="space-y-4">
-                    <h4 className="text-lg font-medium">{content.fun_fact.title}</h4>
-                    {content.fun_fact.description.map((fact, index) => (
-                      <p key={index} className="text-gray-600 leading-relaxed">
-                        {fact}
-                      </p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {images.map((src, index) => (
+                      <img
+                        key={index}
+                        src={src}
+                        alt={`${content.title} illustration ${index + 1}`}
+                        className="aspect-[4/3] rounded-lg shadow-md object-cover"
+                      />
                     ))}
                   </div>
+
+                  {/* Introduction */}
+                  <div className="space-y-4">
+                    <h4 className="text-lg font-medium">
+                      Introduction à {content.title}
+                    </h4>
+                    <p className="text-gray-600 leading-relaxed">
+                      {content.introduction}
+                    </p>
+                  </div>
+
+                  {/* Subtopics */}
+                  { content.subtopics && content.subtopics.map((subtopic, index) => (
+                    <div key={index} className="space-y-4">
+                      <h3 className="text-xl font-semibold">{subtopic.title}</h3>
+                      <p className="text-gray-600 leading-relaxed">
+                        {subtopic.description}
+                      </p>
+                    </div>
+                  ))}
+
+                  {/* Fun Fact */}
+                  {content.fun_fact && content.fun_fact && (
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-medium">{content.fun_fact.title}</h4>
+                      {content.fun_fact.description.map((fact, index) => (
+                        <p key={index} className="text-gray-600 leading-relaxed">
+                          {fact}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                {contentIndex < contents.length - 1 && (
+                  <hr className="my-12 border-black border-t-4 border-dotted" />
                 )}
               </div>
             ))}
