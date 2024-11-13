@@ -25,7 +25,7 @@ export default function Header() {
   const lastParameter = location.pathname.split('/').pop();
 
   return (
-    <header className="flex items-center justify-between p-4 px-8">
+    <header className="fixed top-0 left-0 right-0 w-screen bg-white h-fit flex items-center justify-between p-4 px-8">
       <div className="flex items-center gap-2" onClick={() => navigate('/')}>
         <img src="/logo.svg" alt="Discover logo" />
       </div>

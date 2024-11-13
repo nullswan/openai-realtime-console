@@ -35,23 +35,23 @@ const MOCK_CONTENT: Record<string, TopicResponse> = {
     views: 301,
     timestamp: '10 minutes ago',
     introduction:
-      "Astronomers are abuzz with speculation about Planet 9, a possible ninth planet lurking in the outer solar system. It may be far larger than Earth and orbit the Sun over tens of thousands of years.",
+      'Astronomers are abuzz with speculation about <strong>Planet 9</strong>, a potential ninth planet lurking in the outer reaches of our <strong>solar system</strong>. Recent studies suggest it could be significantly larger than Earth and follow an orbit around the Sun spanning tens of thousands of years.',
     subtopics: [
       {
-        title: 'Evidence of Planet 9',
+        title: 'Evidence Supporting Planet 9',
         description:
-          "Strange orbits of distant celestial bodies hint at an unseen giant planet, potentially altering our understanding of the solar system.",
+          'Anomalies observed in the orbits of certain <strong>trans-Neptunian objects (TNOs)</strong> suggest the influence of a massive, unseen planet. These objects exhibit unusual alignments and orbital inclinations that cannot be explained by the gravitational effects of known planets. Computer simulations indicate that a planet approximately <strong>10 times the mass of Earth</strong>, located at an average distance of <strong>500 astronomical units (AU)</strong> from the Sun, could account for these observations.',
       },
       {
-        title: 'How Astronomers Are Searching',
+        title: "Astronomers' Search Methods",
         description:
-          "Scientists use telescopes and simulations to narrow down Planet 9’s location, tracking gravitational anomalies in nearby objects.",
+          'To locate <strong>Planet 9</strong>, scientists are combining telescopic observations with sophisticated computer modeling. They analyze gravitational perturbations experienced by <strong>TNOs</strong> and search for visual clues in the vast expanses of the sky. The <strong>Vera C. Rubin Observatory</strong>, currently under construction in Chile, is expected to play a crucial role in this quest by providing high-resolution images of distant regions of the solar system.',
       },
     ],
     fun_fact: {
       title: 'Did You Know?',
       description: [
-        "Planet 9 could be 10 times Earth's mass, and its orbit might span 10,000 to 20,000 years.",
+        'If it exists, <strong>Planet 9</strong> could have a mass about <strong>10 times that of Earth</strong> and an orbit so distant that each revolution around the Sun would take between <strong>10,000 and 20,000 years</strong>.',
       ],
     },
     images: [
@@ -60,28 +60,72 @@ const MOCK_CONTENT: Record<string, TopicResponse> = {
     ],
   },
   'python-ml-course': {
-    title: 'Mastering Machine Learning with Python',
-    author: 'dataGuru',
+    title: "Maîtriser l'Apprentissage Automatique avec Python",
+    author: 'jperrama',
     likes: 85,
     views: 540,
-    timestamp: '5 hours ago',
+    timestamp: 'il y a 5 heures',
     introduction:
-      "Unlock the power of Python in the world of machine learning! This course dives into Python basics and builds up to complex algorithms, making it ideal for beginners and experts alike.",
+      "Plongez dans le monde de l'<strong>apprentissage automatique</strong> avec <strong>Python</strong> grâce à ce cours complet qui vous guide des <strong>fondamentaux</strong> du langage aux <strong>algorithmes avancés</strong>, idéal pour les débutants comme pour les experts.",
     subtopics: [
       {
-        title: 'Python Foundations',
-        description: "A refresher on Python essentials, from syntax to data structures.",
+        title: 'Fondations de Python',
+        description:
+          "Ce module couvre les éléments essentiels de <strong>Python</strong>, y compris la <strong>syntaxe</strong>, les <strong>structures de données</strong>, les <strong>fonctions</strong> et les <strong>modules</strong>. Une compréhension solide de ces concepts est cruciale pour aborder les <strong>techniques d'apprentissage automatique</strong>.",
       },
       {
-        title: 'Core Machine Learning Algorithms',
+        title: 'Algorithmes de Base en Apprentissage Automatique',
         description:
-          "Dive into supervised and unsupervised learning, data preprocessing, and model evaluation.",
+          'Explorez les <strong>algorithmes supervisés</strong> et <strong>non supervisés</strong> tels que la <strong>régression linéaire</strong>, les <strong>machines à vecteurs de support (SVM)</strong>, les <strong>forêts aléatoires</strong> et le <strong>clustering k-means</strong>. Apprenez à <strong>prétraiter les données</strong>, sélectionner les caractéristiques pertinentes et évaluer les performances des modèles.',
+      },
+      {
+        title: 'Prétraitement des Données et Ingénierie des Caractéristiques',
+        description:
+          "Comprenez l'importance de <strong>nettoyer</strong> et de <strong>préparer les données</strong> avant d'appliquer des algorithmes d'apprentissage automatique. Cette section aborde la gestion des valeurs manquantes, l'encodage des variables catégorielles, la mise à l'échelle des caractéristiques et la création de nouvelles caractéristiques pour améliorer la précision des modèles.",
+      },
+      {
+        title: 'Évaluation et Validation des Modèles',
+        description:
+          "Apprenez des techniques pour évaluer les performances de vos modèles d'apprentissage automatique. Les sujets incluent la <strong>validation croisée</strong>, les <strong>matrices de confusion</strong>, la <strong>précision</strong>, le <strong>rappel</strong>, les <strong>scores F1</strong> et les <strong>courbes ROC-AUC</strong>.",
+      },
+      {
+        title: 'Sujets Avancés',
+        description:
+          "Plongez dans des concepts avancés d'apprentissage automatique tels que les <strong>méthodes d'ensemble</strong>, la <strong>réduction de dimensionnalité</strong> et une introduction à l'<strong>apprentissage profond</strong> avec les <strong>réseaux neuronaux</strong>.",
+      },
+      {
+        title: 'Applications Pratiques',
+        description:
+          "Appliquez vos connaissances à des scénarios réels, y compris le <strong>traitement du langage naturel</strong>, la <strong>reconnaissance d'images</strong> et la <strong>prévision de séries temporelles</strong>. Ce module met l'accent sur des projets pratiques pour solidifier votre compréhension.",
       },
     ],
     images: [
       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIcBbGo5FZUXE5xukkNMiu_lv4L5DOywDlKA&s',
       'https://m.media-amazon.com/images/I/71o+UlqkwdL._AC_UF894,1000_QL80_.jpg',
     ],
+    // resources: [
+    //   {
+    //     type: 'Livre',
+    //     title:
+    //       'Apprentissage Automatique avec Scikit-Learn, Keras et TensorFlow',
+    //     author: 'Aurélien Géron',
+    //     link: 'https://www.oreilly.com/library/view/hands-on-machine-learning/9781492032632/',
+    //   },
+    //   {
+    //     type: 'Cours en Ligne',
+    //     title: 'Apprentissage Automatique avec Python',
+    //     provider: 'Coursera',
+    //     link: 'https://www.coursera.org/learn/machine-learning-with-python',
+    //   },
+    //   {
+    //     type: 'Documentation',
+    //     title: "Guide de l'Utilisateur Scikit-Learn",
+    //     link: 'https://scikit-learn.org/stable/user_guide.html',
+    //   },
+    // ],
+    // certification: true,
+    // language: 'Français',
+    // enrollment_link: 'https://www.example.com/enroll',
   },
   'prime-number-discovery': {
     title: 'Recent Advances in Prime Number Research',
@@ -90,17 +134,17 @@ const MOCK_CONTENT: Record<string, TopicResponse> = {
     views: 430,
     timestamp: '1 day ago',
     introduction:
-      "Prime numbers hold the key to secrets in mathematics and cryptography. Recent breakthroughs are revealing new patterns and applications that could revolutionize our understanding.",
+      '<strong>Prime numbers</strong>, fundamental entities in <strong>mathematics</strong>, continue to fascinate researchers. Recent breakthroughs have unveiled new patterns and applications that could revolutionize our understanding of these numbers.',
     subtopics: [
       {
         title: 'Emerging Patterns',
         description:
-          "Mathematicians have discovered intriguing patterns, offering insight into one of math's oldest mysteries.",
+          'Mathematicians have discovered intriguing patterns in the distribution of <strong>prime numbers</strong>, offering fresh insights into one of the oldest mysteries in <strong>mathematics</strong>. These findings could have profound implications for <strong>number theory</strong> and related fields.',
       },
       {
         title: 'Cryptography Applications',
         description:
-          "Prime numbers are foundational to encryption, ensuring secure communication in the digital age.",
+          '<strong>Prime numbers</strong> are at the heart of modern <strong>cryptographic systems</strong>, ensuring the security of digital communications. Recent research has led to more efficient methods for generating and testing prime numbers, thereby enhancing the robustness of <strong>encryption algorithms</strong>.',
       },
     ],
     images: [
@@ -119,11 +163,11 @@ export default function Discover() {
   }, [subjectId]);
 
   if (!content) {
-    return <div>Content not found</div>;
+    return <div className="text-white">Content not found</div>;
   }
 
   return (
-    <div>
+    <div className="pt-32 pb-20">
       <Header />
       <div className="max-w-4xl mx-auto p-6">
         <h1 className="text-3xl font-bold mb-4">{content.title}</h1>
@@ -145,7 +189,7 @@ export default function Discover() {
             <span>{content.views} views</span>
           </div>
         </div>
-        <div className="flex items-center gap-2 justify-start mb-">
+        <div className="flex items-center gap-2 justify-start mb-6 mt-10">
           <img src="/logo.svg" alt="" />
         </div>
         <div className="grid grid-cols-2 gap-6 mb-8">
@@ -160,12 +204,18 @@ export default function Discover() {
         </div>
 
         <div className="prose max-w-none">
-          <p className="text-lg mb-8">{content.introduction}</p>
+          <p
+            className="text-lg mb-8"
+            dangerouslySetInnerHTML={{ __html: content.introduction }}
+          ></p>
 
           {content.subtopics.map((subtopic, i) => (
             <section key={i} className="mb-8">
               <h2 className="text-2xl font-semibold mb-4">{subtopic.title}</h2>
-              <p className="whitespace-pre-line">{subtopic.description}</p>
+              <p
+                className="whitespace-pre-line"
+                dangerouslySetInnerHTML={{ __html: subtopic.description }}
+              ></p>
             </section>
           ))}
 
@@ -176,7 +226,7 @@ export default function Discover() {
               </h3>
               <ul className="list-disc pl-6">
                 {content.fun_fact.description.map((fact, i) => (
-                  <li key={i}>{fact}</li>
+                  <li key={i} dangerouslySetInnerHTML={{ __html: fact }}></li>
                 ))}
               </ul>
             </section>
