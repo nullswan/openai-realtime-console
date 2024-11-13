@@ -4,8 +4,7 @@ import { OPENAI_API_KEY } from '../../lib/wavtools/lib/realtime/core';
 import OpenAI from 'openai';
 import { z } from 'zod';
 import { zodResponseFormat } from 'openai/helpers/zod';
-import { useEffect } from 'react';
-
+import { useEffect, useState } from 'react';
 
 interface RoadmapTopic {
   name: string;
@@ -76,6 +75,8 @@ async function getTopic(
 
 export default function Discover() {
   const { subjectId } = useParams<{ subjectId: string }>();
+
+  const [description, setDescription] = useState<string>('');
   const subjects: Map<string, RoadmapResponse> = new Map();
 
   useEffect(() => {
@@ -85,19 +86,18 @@ export default function Discover() {
 
     (async () => {
       const roadmap = await getRoadmap(subjectId);
-      console.log(roadmap)
-      roadmap.topics.forEach((topic) => {
-        getTopic(subjectId, topic.name, (message) => {
-          console.log(message);
-        });
+      console.log(roadmap);
+      getTopic(subjectId, roadmap.topics[0].name, (chunk) => {
+        setDescription((prevDescription) => prevDescription + chunk);
       });
     })();
-  });
+  }, [subjectId]);
 
   return (
     <div className="min-h-screen bg-white ">
       <Header />
       <div>{subjectId}</div>
+      <div>{description}</div>
     </div>
   );
 }
