@@ -16,7 +16,7 @@ interface RoadmapTopic {
 interface RoadmapResponse {
   subject: string;
   topics: RoadmapTopic[];
-  images: string[]
+  images: string[];
 }
 
 interface SubtopicResponse {
@@ -39,16 +39,18 @@ interface TopicResponse {
 
 const RoadmapResponse = z.object({
   subject: z.string(),
-  topics: z.array(z.object({
-    name: z.string(),
-    description: z.string(),
-  })),
+  topics: z.array(
+    z.object({
+      name: z.string(),
+      description: z.string(),
+    })
+  ),
   images: z.array(z.string()),
-})
+});
 
 const SubtopicResponse = z.object({
   title: z.string(),
-  description: z.string()
+  description: z.string(),
 });
 
 const FunFact = z.object({
@@ -62,7 +64,7 @@ const TopicResponse = z.object({
   subtopics: z.array(SubtopicResponse),
   fun_fact: z.optional(FunFact),
   links: z.array(z.string()).optional(),
-})
+});
 /* Les images seront gérées séparément en fonction du subjectId */
 
 const TopicResponseSchema = z.object({
@@ -92,18 +94,19 @@ const getRoadmapUserPrompt = (subjectId: string) => `
   I want to learn about ${subjectId}, return 3 topics
 `;
 
-async function getRoadmap(
-  subjectId: string,
-): Promise<RoadmapResponse> {
-  const client = new OpenAI({ apiKey: OPENAI_API_KEY, dangerouslyAllowBrowser: true });
+async function getRoadmap(subjectId: string): Promise<RoadmapResponse> {
+  const client = new OpenAI({
+    apiKey: OPENAI_API_KEY,
+    dangerouslyAllowBrowser: true,
+  });
 
   const stream = await client.chat.completions.create({
-    model: "gpt-4o-mini",
+    model: 'gpt-4o-mini',
     messages: [
-      { role: "system", content: getRoadmapSystemPrompt },
-      { role: "user", content: getRoadmapUserPrompt(subjectId) }
+      { role: 'system', content: getRoadmapSystemPrompt },
+      { role: 'user', content: getRoadmapUserPrompt(subjectId) },
     ],
-    response_format: zodResponseFormat(RoadmapResponse, "learning_roadmap"),
+    response_format: zodResponseFormat(RoadmapResponse, 'learning_roadmap'),
   });
 
   const message = JSON.parse(stream.choices[0].message.content);
@@ -112,17 +115,20 @@ async function getRoadmap(
 
 async function getTopic(
   subjectId: string,
-  topicId: string,
+  topicId: string
 ): Promise<TopicResponse> {
-  const client = new OpenAI({ apiKey: OPENAI_API_KEY, dangerouslyAllowBrowser: true });
+  const client = new OpenAI({
+    apiKey: OPENAI_API_KEY,
+    dangerouslyAllowBrowser: true,
+  });
 
   const stream = await client.chat.completions.create({
-    model: "gpt-4o-mini",
+    model: 'gpt-4o-mini',
     messages: [
-      { role: "system", content: getTopicSystemPrompt },
-      { role: "user", content: getTopicUserPrompt(subjectId, topicId) }
+      { role: 'system', content: getTopicSystemPrompt },
+      { role: 'user', content: getTopicUserPrompt(subjectId, topicId) },
     ],
-    response_format: zodResponseFormat(TopicResponse, "topic"),
+    response_format: zodResponseFormat(TopicResponse, 'topic'),
   });
 
   // Parse the JSON string from the response before validating with Zod
@@ -164,14 +170,13 @@ export default function Discover() {
   const { subjectId } = useParams<{ subjectId: string }>();
   const [contents, setContents] = useState<TopicResponse[]>([]);
   const [roadmap, setRoadmap] = useState<RoadmapResponse | null>(null);
-  const [images, setImages] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
   const asyncGetRoadmap = async () => {
     const roadmap = await getRoadmap(subjectId);
     console.log('roadmap', roadmap);
     return roadmap;
-  }
+  };
 
   useEffect(() => {
     (async () => {
@@ -186,9 +191,7 @@ export default function Discover() {
   useEffect(() => {
     if (roadmap) {
       Promise.all(
-        roadmap.topics.map(topic =>
-          getTopic(subjectId, topic.name)
-        )
+        roadmap.topics.map((topic) => getTopic(subjectId, topic.name))
       ).then((topics) => {
         setContents(topics);
         setLoading(false);
@@ -212,56 +215,82 @@ export default function Discover() {
                   <div className="flex items-center gap-2 justify-start">
                     <img src="/logo.svg" alt="" />
                   </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {images.map((src, index) => (
-                      <img
-                        key={index}
-                        src={src}
-                        alt={`${content.title} illustration ${index + 1}`}
-                        className="aspect-[4/3] rounded-lg shadow-md object-cover"
-                      />
-                    ))}
-                  </div>
-
+                  {contentIndex === 0 && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {['6.png', '5.png'].map((src, index) => (
+                        <img
+                          key={index}
+                          src={`/img/${src}`}
+                          alt={`${content.title} illustration ${index + 1}`}
+                          className={`${
+                            index === 0 ? 'w-[30vw]' : 'w-[40vw]'
+                          } h-[250px] rounded-lg shadow-md object-cover`}
+                        />
+                      ))}
+                    </div>
+                  )}
 
                   {/* Introduction */}
                   <div className="space-y-4">
-                    <h4 className="text-lg font-medium">
-                      {content.title}
-                    </h4>
+                    <h4 className="text-lg font-medium">{content.title}</h4>
                     <p className="text-gray-600 leading-relaxed">
                       {content.introduction}
                     </p>
                   </div>
 
-                  {content.links && <div className="p-4 bg-gray-100 border border-gray-300 rounded overflow-hidden">
-                    <h4 className="text-lg font-medium mb-2">
-                      References
-                    </h4>
-                    <ul className="flex flex-col space-y-2">
-                      {content.links.map((link, index) => <li key={index} className="flex items-center truncate"><span className="mr-2 text-blue-600">🔗</span><a href={link} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">{link.replace(/^https?:\/\/(www\.)?perplexity.ai\/search\/new/, 'chat.com\/search')}
-                      </a>
-                      </li>)}
-                    </ul>
-                  </div>}
+                  {content.links && (
+                    <div className="p-4 bg-gray-100 border border-gray-300 rounded overflow-hidden">
+                      <h4 className="text-lg font-medium mb-2">References</h4>
+                      <ul className="flex flex-col space-y-2">
+                        {content.links.map((link, index) => (
+                          <li
+                            key={index}
+                            className="flex items-center truncate"
+                          >
+                            <span className="mr-2 text-blue-600">🔗</span>
+                            <a
+                              href={link}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-blue-600 hover:underline"
+                            >
+                              {link
+                                .replace(
+                                  /^https?:\/\/(www\.)?perplexity.ai\/search\/new/,
+                                  'chat.com/search'
+                                )
+                                .replace(/%20/g, '-')}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
 
                   {/* Subtopics */}
-                  {content.subtopics && content.subtopics.map((subtopic, index) => (
-                    <div key={index} className="space-y-4">
-                      <h3 className="text-xl font-semibold">{subtopic.title}</h3>
-                      <p className="text-gray-600 leading-relaxed">
-                        {subtopic.description}
-                      </p>
-                    </div>
-                  ))}
+                  {content.subtopics &&
+                    content.subtopics.map((subtopic, index) => (
+                      <div key={index} className="space-y-4">
+                        <h3 className="text-xl font-semibold">
+                          {subtopic.title}
+                        </h3>
+                        <p className="text-gray-600 leading-relaxed">
+                          {subtopic.description}
+                        </p>
+                      </div>
+                    ))}
 
                   {/* Fun Fact */}
                   {content.fun_fact && content.fun_fact && (
                     <div className="space-y-4">
-                      <h4 className="text-lg font-medium">{content.fun_fact.title}</h4>
+                      <h4 className="text-lg font-medium">
+                        {content.fun_fact.title}
+                      </h4>
                       {content.fun_fact.description.map((fact, index) => (
-                        <p key={index} className="text-gray-600 leading-relaxed">
+                        <p
+                          key={index}
+                          className="text-gray-600 leading-relaxed"
+                        >
                           {fact}
                         </p>
                       ))}
