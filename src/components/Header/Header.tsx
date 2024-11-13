@@ -1,25 +1,29 @@
-import React from 'react';
 import { Plus } from 'react-feather';
 import { Button } from '../../@/components/ui/button';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function Header() {
   const location = useLocation();
-  const isSearchRoute = location.pathname === '/search';
+
+  const navigate = useNavigate();
+  const isTellMeMoreRoute = location.pathname === '/tell-me-more';
 
   return (
     <header className="flex items-center justify-between p-4 px-8">
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2" onClick={
+        () => navigate('/')
+      }>
         <img src="/logo.svg" alt="Discover logo" />
       </div>
       <div className="flex items-center gap-6">
-        {!isSearchRoute ? (
+        {isTellMeMoreRoute ? (
           <Button
             size="sm"
             variant="secondary"
             className="rounded-full px-4 py-2 text-sm font-medium bg-gray-200 hover:bg-gray-300 text-gray-800"
+            onClick={() => navigate('/')}
           >
-            Submit knowledge
+            Submit Knowledge
           </Button>
         ) : (
           <>
@@ -42,6 +46,6 @@ export default function Header() {
           </>
         )}
       </div>
-    </header>
+    </header >
   );
 }
