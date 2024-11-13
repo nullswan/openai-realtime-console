@@ -126,26 +126,26 @@ let last_call = new Date();
 let isFirstCall = true;
 
 interface KeyConcepts {
-    name: string;
-    isLearned: boolean;
-    description: string;
-  }
+  name: string;
+  isLearned: boolean;
+  description: string;
+}
   
-  interface Task {
-    priority: number;
-    name: string;
-    description: string;
-    key_concepts: KeyConcepts[];
-    resources: string[];
-    practical_applications?: string;
-    image?: string;
-    progress: string;
-  }
-  
-  interface RoadmapResponse {
-    subject: string;
-    tasks: Task[];
-  }
+interface Task {
+  priority: number;
+  name: string;
+  description: string;
+  key_concepts: KeyConcepts[];
+  resources: string[];
+  practical_applications?: string;
+  image?: string;
+  progress: string;
+}
+
+interface RoadmapResponse {
+  subject: string;
+  tasks: Task[];
+}
 
 export async function getRoadmap(apiKey: string, request: string, setResponse: (response: RoadmapResponse) => void): Promise<RoadmapResponse> {
     // Modified rate limiting check
