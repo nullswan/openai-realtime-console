@@ -2,10 +2,16 @@ import { Input } from '../../@/components/ui/input';
 import { Heart, ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '../../@/components/ui/card';
 import Header from '../../components/Header/Header';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 
 
 export default function Search() {
+  const name = localStorage.getItem('name') || 'Ethan';
+  const navigate = useNavigate();
+  const [query, setQuery] = useState('');
+
   const articles = [
     {
       title: 'Prime number discovery',
@@ -39,29 +45,57 @@ export default function Search() {
     },
   ];
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate(`/what-to-learn?q=${encodeURIComponent(query)}`);
+  };
+
+  const filteredArticles = articles.filter((article) => {
+    const words = query
+      .toLowerCase()
+      .split(/\s+/)
+      .filter((word) => word.length > 4);
+
+    return words.some(
+      (word) =>
+        article.title.toLowerCase().includes(word) ||
+        article.description.toLowerCase().includes(word) ||
+        article.author.toLowerCase().includes(word)
+    );
+  });
+
+  const articlesToDisplay = filteredArticles.length > 0 ? filteredArticles : articles;
+
   return (
     <div className="min-h-screen bg-white">
       <Header />
       <main className="absolute w-screen h-screen flex flex-col items-center justify-center gap-[3vh] mt-[5vh] mx-auto px-4">
-        <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center min-w-[40%]">
           <h1 className="font-semibold text-2xl mb-8 text-gray-900">
-            Hello Ethan, what would you like to discover today?
+            Hello {name} 👋
           </h1>
-          <div className="w-full max-w-xl relative">
+          <form onSubmit={handleSubmit} className="w-full max-w-xl relative">
             <Input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
               className="bg-gray-50 h-12 pl-6 pr-12 rounded-full text-gray-900 border-0 shadow-sm"
-              placeholder="Type your message..."
+              placeholder="What would you like to discover today?"
             />
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 bg-gray-200 rounded-full p-2">
+            <button
+              type="submit"
+              className={`absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-2 ${query.length >= 4 ? 'bg-black' : 'bg-gray-200'
+                }`}
+            >
               <ArrowRight className="-rotate-90 h-4 w-4 text-white" />
-            </div>
-          </div>
+            </button>
+          </form>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-[80%]">
-          {articles.map((article, index) => (
+          {articlesToDisplay.map((article, index) => (
             <Card
               key={index}
               className="overflow-hidden border-0 shadow-sm hover:shadow-md transition-shadow rounded-none"
+              onClick={() => navigate(`/what-to-learn?q=${encodeURIComponent(article.title)}`)}
             >
               <CardHeader className="p-0">
                 <img
@@ -82,7 +116,7 @@ export default function Search() {
                     <div className="bg-gray-100 rounded-full overflow-hidden p-1">
                       <img
                         src={`img/${article.profile_img}`}
-                        alt={article.title}
+                        alt={article.author}
                         className="h-5 w-5 object-cover rounded-full"
                       />
                     </div>
