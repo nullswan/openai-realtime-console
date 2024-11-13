@@ -5,6 +5,7 @@ import Roadmap from './pages/roadmap';
 import TellMeMore from './pages/tell-me-more';
 import './App.scss';
 import WhatToLearn from './pages/what-to-learn';
+import SearchPage from './pages/search';
 import { GlobalRefsProvider } from './lib/wavtools/lib/realtime/client';
 import ProfilePage from './pages/profile';
 
@@ -16,6 +17,7 @@ function App() {
           <Routes>
             <Route path="/" element={<TellMeMore />} />
             <Route path="/console" element={<ConsolePage />} />
+            <Route path="/search" element={<SearchPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/learning/:subjectId/:priorityId" element={<LearningPage />} />
             <Route path="/roadmap/:subjectId" element={<Roadmap />} />
