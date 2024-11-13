@@ -34,6 +34,7 @@ interface TopicResponse {
   introduction: string;
   subtopics: SubtopicResponse[];
   fun_fact?: FunFact;
+  links?: string[];
 }
 
 const RoadmapResponse = z.object({
@@ -60,6 +61,7 @@ const TopicResponse = z.object({
   introduction: z.string(),
   subtopics: z.array(SubtopicResponse),
   fun_fact: z.optional(FunFact),
+  links: z.array(z.string()).optional(),
 })
 /* Les images seront gérées séparément en fonction du subjectId */
 
@@ -184,7 +186,7 @@ export default function Discover() {
   useEffect(() => {
     if (roadmap) {
       Promise.all(
-        roadmap.topics.map(topic => 
+        roadmap.topics.map(topic =>
           getTopic(subjectId, topic.name)
         )
       ).then((topics) => {
@@ -225,7 +227,7 @@ export default function Discover() {
                   {/* Introduction */}
                   <div className="space-y-4">
                     <h4 className="text-lg font-medium">
-                      Introduction à {content.title}
+                      {content.title}
                     </h4>
                     <p className="text-gray-600 leading-relaxed">
                       {content.introduction}
@@ -233,7 +235,7 @@ export default function Discover() {
                   </div>
 
                   {/* Subtopics */}
-                  { content.subtopics && content.subtopics.map((subtopic, index) => (
+                  {content.subtopics && content.subtopics.map((subtopic, index) => (
                     <div key={index} className="space-y-4">
                       <h3 className="text-xl font-semibold">{subtopic.title}</h3>
                       <p className="text-gray-600 leading-relaxed">
