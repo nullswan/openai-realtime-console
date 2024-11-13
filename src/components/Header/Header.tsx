@@ -8,7 +8,7 @@ export default function Header() {
           <img src="/logo.svg" alt="Discover logo" />
         </div>
         <div className="flex items-center gap-6">
-          <Button variant="ghost" className="text-black font-semibold">
+          <Button variant="ghost" className="text-black">
             My articles
           </Button>
           <Button
