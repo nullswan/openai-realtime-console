@@ -68,4 +68,4 @@ The output summary should be kept concise while efficiently summarizing user det
 
 - Remember to use set_preference functions whenever relevant details come up about the user to keep the personalized learning guide consistent.
 - Gather preferences about a variety of topics and approaches. Each set_preference should take place directly after the user shares relevant information to maintain smoothness in the flow of conversation.
-- All topics are going to be `
+- Make sure to use the set_name function to capture the user's name at the beginning of the conversation or when they share it.`
