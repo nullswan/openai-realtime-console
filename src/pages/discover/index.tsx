@@ -224,6 +224,7 @@ export default function Discover() {
                     ))}
                   </div>
 
+
                   {/* Introduction */}
                   <div className="space-y-4">
                     <h4 className="text-lg font-medium">
@@ -233,6 +234,8 @@ export default function Discover() {
                       {content.introduction}
                     </p>
                   </div>
+
+                  {content.links && <div className="p-4 bg-gray-100 border border-gray-300 rounded overflow-hidden"><h4 className="text-lg font-medium mb-2">References</h4><ul className="flex flex-col space-y-2">{content.links.map((link, index) => <li key={index} className="flex items-center truncate"><span className="mr-2 text-blue-600">🔗</span><a href={link} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">{link.replace(/^https?:\/\/(www\.)?/, '')}</a></li>)}</ul></div>}
 
                   {/* Subtopics */}
                   {content.subtopics && content.subtopics.map((subtopic, index) => (
