@@ -92,11 +92,11 @@ const getRoadmapUserPrompt = (subjectId: string) => `
 
 async function getRoadmap(
   subjectId: string,
-) {
+): Promise<RoadmapResponse> {
   const client = new OpenAI({ apiKey: OPENAI_API_KEY, dangerouslyAllowBrowser: true });
 
   const stream = await client.chat.completions.create({
-    model: "gpt-4o",
+    model: "gpt-4o-mini",
     messages: [
       { role: "system", content: getRoadmapSystemPrompt },
       { role: "user", content: getRoadmapUserPrompt(subjectId) }
@@ -105,45 +105,31 @@ async function getRoadmap(
   });
 
   const message = JSON.parse(stream.choices[0].message.content);
-  return RoadmapResponse.parse(message);
+  return message as RoadmapResponse;
 }
 
 async function getTopic(
   subjectId: string,
-  topicId: string
+  topicId: string,
+  // streamCallback: (message: string) => void
 ): Promise<TopicResponse> {
-  const client = new OpenAI({
-    apiKey: OPENAI_API_KEY,
-    dangerouslyAllowBrowser: true,
-  });
+  const client = new OpenAI({ apiKey: OPENAI_API_KEY, dangerouslyAllowBrowser: true });
 
-  const response = await client.chat.completions.create({
-    model: 'gpt-4',
+  const stream = await client.chat.completions.create({
+    model: "gpt-4o-mini",
     messages: [
-      { role: 'system', content: getTopicSystemPrompt },
-      { role: 'user', content: getTopicUserPrompt(subjectId, topicId) },
+      { role: "system", content: getTopicSystemPrompt },
+      { role: "user", content: getTopicUserPrompt(subjectId, topicId) }
     ],
-    response_format: zodResponseFormat(TopicResponseSchema, 'topic'),
-    stream: true,
+    response_format: zodResponseFormat(TopicResponse, "topic"),
+    // stream: true,
   });
 
-  const messageContent = response.choices[0].message?.content;
-
-  if (!messageContent) {
-    throw new Error('La réponse de l\'API est vide.');
-  }
-
-  let parsedMessage;
-
-  try {
-    parsedMessage = JSON.parse(messageContent);
-  } catch (e) {
-    throw new Error('Échec de l\'analyse du contenu de la réponse en JSON.');
-  }
-
-  const topicResponse = TopicResponseSchema.parse(parsedMessage);
-
-  return topicResponse[0];
+  // for await (const message of stream) {
+  //   streamCallback(message.choices[0]?.delta?.content || '');
+  // }
+  console.log('stream', stream.choices[0].message.content);
+  return TopicResponse.parse(stream.choices[0].message.content) as TopicResponse;
 }
 
 function LoadingSkeleton() {
@@ -185,15 +171,16 @@ export default function Discover() {
 
   const asyncGetRoadmap = async () => {
     const roadmap = await getRoadmap(subjectId);
+    console.log('roadmap', roadmap);
     return roadmap;
   }
 
   useEffect(() => {
     (async () => {
-      const roadmap = await asyncGetRoadmap();
-      console.log(roadmap);
-      if (roadmap) {
-        setRoadmap(roadmap);
+      const roadmapResponse: RoadmapResponse = await asyncGetRoadmap();
+      console.log('roadmapResponse', roadmapResponse);
+      if (roadmapResponse) {
+        setRoadmap(roadmapResponse);
       }
     })();
   }, [subjectId]);
@@ -201,7 +188,7 @@ export default function Discover() {
   useEffect(() => {
     if (roadmap) {
       getTopic(subjectId, roadmap.topics[0].name).then((topic) => {
-        setContent(topic);
+        setContent(JSON.parse(topic));
       });
     }
   }, [subjectId, roadmap]);
