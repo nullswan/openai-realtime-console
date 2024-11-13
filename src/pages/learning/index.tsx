@@ -188,7 +188,7 @@ function Learning() {
   useEffect(() => {
     if (progress === 100) {
       setPriority(subjectId, parseInt(priorityId), 'Done');
-      navigate('/roadmap/' + subjectId);
+      navigate('/discover/' + subjectId);
     }
   }, [progress]);
 
