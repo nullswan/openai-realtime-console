@@ -94,7 +94,7 @@ export default function Search() {
           {articlesToDisplay.map((article, index) => (
             <Card
               key={index}
-              className="overflow-hidden border-0 shadow-sm hover:shadow-md transition-shadow rounded-none"
+              className="overflow-hidden border-0 shadow-sm hover:shadow-md transition-shadow rounded-md"
               onClick={() => navigate(`/g/${encodeURIComponent(article.title)}`)}
             >
               <CardHeader className="p-0">
