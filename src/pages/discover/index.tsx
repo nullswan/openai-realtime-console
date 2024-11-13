@@ -111,7 +111,6 @@ async function getRoadmap(
 async function getTopic(
   subjectId: string,
   topicId: string,
-  // streamCallback: (message: string) => void
 ): Promise<TopicResponse> {
   const client = new OpenAI({ apiKey: OPENAI_API_KEY, dangerouslyAllowBrowser: true });
 
@@ -122,14 +121,11 @@ async function getTopic(
       { role: "user", content: getTopicUserPrompt(subjectId, topicId) }
     ],
     response_format: zodResponseFormat(TopicResponse, "topic"),
-    // stream: true,
   });
 
-  // for await (const message of stream) {
-  //   streamCallback(message.choices[0]?.delta?.content || '');
-  // }
-  console.log('stream', stream.choices[0].message.content);
-  return TopicResponse.parse(stream.choices[0].message.content) as TopicResponse;
+  // Parse the JSON string from the response before validating with Zod
+  const responseData = JSON.parse(stream.choices[0].message.content);
+  return responseData as TopicResponse;
 }
 
 function LoadingSkeleton() {
@@ -188,7 +184,8 @@ export default function Discover() {
   useEffect(() => {
     if (roadmap) {
       getTopic(subjectId, roadmap.topics[0].name).then((topic) => {
-        setContent(JSON.parse(topic));
+        setContent(topic);
+        setLoading(false);
       });
     }
   }, [subjectId, roadmap]);
@@ -300,7 +297,7 @@ export default function Discover() {
           <LoadingSkeleton />
         ) : content ? (
           <div className="max-w-3xl mx-auto px-4 space-y-8">
-            <h1 className="text-2xl font-bold">{content.title}</h1>
+            <h1 className="text-2xl font-bold">{content?.title}</h1>
 
             <div className="flex items-center gap-2 justify-start">
               <img src="/logo.svg" alt="" />
@@ -311,7 +308,7 @@ export default function Discover() {
                 <img
                   key={index}
                   src={src}
-                  alt={`${content.title} illustration ${index + 1}`}
+                  alt={`${content?.title} illustration ${index + 1}`}
                   className="aspect-[4/3] rounded-lg shadow-md object-cover"
                 />
               ))}
@@ -320,15 +317,15 @@ export default function Discover() {
             {/* Introduction */}
             <div className="space-y-4">
               <h4 className="text-lg font-medium">
-                Introduction à {content.title}
+                Introduction à {content?.title}
               </h4>
               <p className="text-gray-600 leading-relaxed">
-                {content.introduction}
+                {content?.introduction}
               </p>
             </div>
 
             {/* Subtopics */}
-            {content.subtopics.map((subtopic, index) => (
+            { content.subtopics && content.subtopics.map((subtopic, index) => (
               <div key={index} className="space-y-4">
                 <h3 className="text-xl font-semibold">{subtopic.title}</h3>
                 <p className="text-gray-600 leading-relaxed">
@@ -338,7 +335,7 @@ export default function Discover() {
             ))}
 
             {/* Fun Fact */}
-            {content.fun_fact && (
+            {content.fun_fact && content.fun_fact && (
               <div className="space-y-4">
                 <h4 className="text-lg font-medium">{content.fun_fact.title}</h4>
                 {content.fun_fact.description.map((fact, index) => (
