@@ -79,14 +79,7 @@ export default function Component() {
     event: React.KeyboardEvent<HTMLInputElement>
   ) => {
     if (event.key === 'Enter' && event.currentTarget.value !== '') {
-      setIsLoading(true);
-      // Assuming getRoadmap is defined elsewhere
-      const roadmap = await getRoadmap(
-        apiKey,
-        event.currentTarget.value,
-        setRoadmap
-      );
-      setIsLoading(false);
+      navigate(`/discover/` + encodeURIComponent(event.currentTarget.value));
     }
   };
 
@@ -151,7 +144,7 @@ export default function Component() {
                     <Button
                       key={index}
                       variant="outline"
-                      onClick={() => {setInputValue(suggestion.subject) ;handleSubmit(suggestion.subject)}}
+                      onClick={() => { setInputValue(suggestion.subject); handleSubmit(suggestion.subject) }}
                       className="flex-shrink-0 rounded-full border-gray-200 text-xs py-1 px-3"
                     >
                       <span>{suggestion.subject}</span>
