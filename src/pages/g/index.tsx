@@ -32,7 +32,7 @@ const MOCK_CONTENT: Record<string, TopicResponse> = {
   'new-planet-9-discovery': {
     title: 'Breaking News: Possible Discovery of Planet 9',
     author: 'astroFan',
-    likes: 45,
+    likes: 7761,
     views: 301,
     timestamp: '10 minutes ago',
     introduction:
@@ -63,7 +63,7 @@ const MOCK_CONTENT: Record<string, TopicResponse> = {
   'python-ml-course': {
     title: "Mastering Machine Learning with Python",
     author: 'jperrama',
-    likes: 85,
+    likes: 3451,
     views: 540,
     timestamp: '5 hours ago',
     introduction:
@@ -176,7 +176,7 @@ const MOCK_CONTENT: Record<string, TopicResponse> = {
   'prime-number-discovery': {
     title: 'Recent Advances in Prime Number Research',
     author: 'mathWhiz',
-    likes: 70,
+    likes: 1106,
     views: 430,
     timestamp: '1 day ago',
     introduction:
