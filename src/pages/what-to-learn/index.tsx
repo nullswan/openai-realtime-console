@@ -1,11 +1,6 @@
 'use client';
 
-import {
-  ArrowUpCircle,
-  ArrowUpRight,
-  Flame,
-  ChevronRight,
-} from 'lucide-react';
+import { ArrowUpCircle, ArrowUpRight, Flame, ChevronRight, ArrowRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '../../@/components/ui/button';
@@ -62,9 +57,7 @@ export default function Component() {
 
     fetchSuggestions();
     handleQuery();
-
   }, [apiKey, query]);
-
 
   const handleQuery = async () => {
     if (query) {
@@ -132,7 +125,7 @@ export default function Component() {
                 {isLoading ? (
                   <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-white"></div>
                 ) : (
-                  <ArrowUpCircle className="w-5 h-5" />
+                  <ArrowRight className="-rotate-90 h-4 w-4 text-white" />
                 )}
                 <span className="sr-only">Submit</span>
               </Button>
@@ -144,7 +137,10 @@ export default function Component() {
                     <Button
                       key={index}
                       variant="outline"
-                      onClick={() => { setInputValue(suggestion.subject); handleSubmit(suggestion.subject) }}
+                      onClick={() => {
+                        setInputValue(suggestion.subject);
+                        handleSubmit(suggestion.subject);
+                      }}
                       className="flex-shrink-0 rounded-full border-gray-200 text-xs py-1 px-3"
                     >
                       <span>{suggestion.subject}</span>
