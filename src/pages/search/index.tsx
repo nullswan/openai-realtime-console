@@ -46,6 +46,10 @@ export default function Search() {
   ];
 
   const handleSubmit = (e) => {
+    if (query.length < 4) {
+      e.preventDefault();
+      return;
+    }
     e.preventDefault();
     navigate(`/what-to-learn?q=${encodeURIComponent(query)}`);
   };
