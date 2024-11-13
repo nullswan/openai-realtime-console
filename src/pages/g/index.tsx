@@ -25,6 +25,7 @@ interface TopicResponse {
   subtopics: SubtopicResponse[];
   fun_fact?: FunFact;
   images: string[];
+  links?: string[];
 }
 
 const MOCK_CONTENT: Record<string, TopicResponse> = {
@@ -60,72 +61,117 @@ const MOCK_CONTENT: Record<string, TopicResponse> = {
     ],
   },
   'python-ml-course': {
-    title: "Maîtriser l'Apprentissage Automatique avec Python",
+    title: "Mastering Machine Learning with Python",
     author: 'jperrama',
     likes: 85,
     views: 540,
-    timestamp: 'il y a 5 heures',
+    timestamp: '5 hours ago',
     introduction:
-      "Plongez dans le monde de l'<strong>apprentissage automatique</strong> avec <strong>Python</strong> grâce à ce cours complet qui vous guide des <strong>fondamentaux</strong> du langage aux <strong>algorithmes avancés</strong>, idéal pour les débutants comme pour les experts.",
+      "Embark on a comprehensive journey into the world of <strong>machine learning</strong> using <strong>Python</strong>. This course covers everything from the <strong>fundamentals</strong> of the language to <strong>advanced algorithms</strong>, tailored for both beginners and seasoned professionals.",
     subtopics: [
       {
-        title: 'Fondations de Python',
+        title: 'Introduction to Python Programming',
         description:
-          "Ce module couvre les éléments essentiels de <strong>Python</strong>, y compris la <strong>syntaxe</strong>, les <strong>structures de données</strong>, les <strong>fonctions</strong> et les <strong>modules</strong>. Une compréhension solide de ces concepts est cruciale pour aborder les <strong>techniques d'apprentissage automatique</strong>.",
+          "Begin your journey with an introduction to <strong>Python programming</strong>, exploring the language's history, philosophy, and key features that make it ideal for <strong>machine learning</strong>. Learn how to set up your development environment, write your first Python program, and understand basic programming concepts such as variables, data types, and control structures. This module also delves into the Python ecosystem, introducing you to essential tools and resources.",
       },
       {
-        title: 'Algorithmes de Base en Apprentissage Automatique',
+        title: 'Python Foundations',
         description:
-          'Explorez les <strong>algorithmes supervisés</strong> et <strong>non supervisés</strong> tels que la <strong>régression linéaire</strong>, les <strong>machines à vecteurs de support (SVM)</strong>, les <strong>forêts aléatoires</strong> et le <strong>clustering k-means</strong>. Apprenez à <strong>prétraiter les données</strong>, sélectionner les caractéristiques pertinentes et évaluer les performances des modèles.',
+          "Deepen your understanding of <strong>Python</strong> by studying its <strong>syntax</strong>, working with <strong>data structures</strong> like lists, tuples, dictionaries, and sets, and writing functions and modules for code reusability. This module emphasizes object-oriented programming principles, exception handling, and best practices for writing clean, efficient Python code. Building a strong foundation in these concepts is vital for mastering <strong>machine learning techniques</strong> and will enable you to tackle complex coding challenges with confidence.",
       },
       {
-        title: 'Prétraitement des Données et Ingénierie des Caractéristiques',
+        title: 'Probability and Statistics for Machine Learning',
         description:
-          "Comprenez l'importance de <strong>nettoyer</strong> et de <strong>préparer les données</strong> avant d'appliquer des algorithmes d'apprentissage automatique. Cette section aborde la gestion des valeurs manquantes, l'encodage des variables catégorielles, la mise à l'échelle des caractéristiques et la création de nouvelles caractéristiques pour améliorer la précision des modèles.",
+          "Develop a solid grasp of the <strong>probability and statistics</strong> concepts that underpin machine learning algorithms. Cover fundamental topics such as probability distributions, statistical significance, hypothesis testing, Bayesian inference, and data sampling methods. Understand how statistical measures like mean, median, variance, and standard deviation are used in data analysis. This module bridges the gap between mathematical theory and practical application, ensuring you can interpret and utilize statistical information effectively in your machine learning projects.",
       },
       {
-        title: 'Évaluation et Validation des Modèles',
+        title: 'Data Manipulation and Analysis with Pandas',
         description:
-          "Apprenez des techniques pour évaluer les performances de vos modèles d'apprentissage automatique. Les sujets incluent la <strong>validation croisée</strong>, les <strong>matrices de confusion</strong>, la <strong>précision</strong>, le <strong>rappel</strong>, les <strong>scores F1</strong> et les <strong>courbes ROC-AUC</strong>.",
+          "Master data manipulation and analysis using the <strong>Pandas</strong> library, a powerful tool for handling structured data. Learn how to read and write data in various formats such as CSV, Excel, and SQL databases. Explore data cleaning techniques to handle missing or inconsistent data, and perform operations like filtering, sorting, grouping, and aggregating data. This module also covers time series analysis and introduces you to advanced indexing and selection methods, enabling you to prepare datasets efficiently for machine learning tasks.",
       },
       {
-        title: 'Sujets Avancés',
+        title: 'Data Visualization with Matplotlib and Seaborn',
         description:
-          "Plongez dans des concepts avancés d'apprentissage automatique tels que les <strong>méthodes d'ensemble</strong>, la <strong>réduction de dimensionnalité</strong> et une introduction à l'<strong>apprentissage profond</strong> avec les <strong>réseaux neuronaux</strong>.",
+          "Discover how to visualize data effectively using <strong>Matplotlib</strong> and <strong>Seaborn</strong>. Learn to create a wide array of plots and charts, including line graphs, bar charts, histograms, box plots, heatmaps, and pair plots. Understand the principles of good visualization design, such as choosing appropriate color schemes and scales. This module emphasizes the importance of visual storytelling, teaching you how to communicate insights and patterns in the data compellingly to stakeholders and team members.",
       },
       {
-        title: 'Applications Pratiques',
+        title: 'Supervised Learning Algorithms',
         description:
-          "Appliquez vos connaissances à des scénarios réels, y compris le <strong>traitement du langage naturel</strong>, la <strong>reconnaissance d'images</strong> et la <strong>prévision de séries temporelles</strong>. Ce module met l'accent sur des projets pratiques pour solidifier votre compréhension.",
+          "Dive deep into <strong>supervised learning</strong>, where models are trained using labeled data. Study algorithms such as <strong>linear regression</strong> for predicting continuous outcomes, <strong>logistic regression</strong> for classification problems, <strong>decision trees</strong>, <strong>random forests</strong>, and <strong>support vector machines (SVM)</strong>. Gain an understanding of the mathematical foundations and assumptions behind each algorithm. Through practical exercises, learn how to implement these algorithms using Python libraries, tune hyperparameters, and interpret model outputs to make informed decisions.",
+      },
+      {
+        title: 'Unsupervised Learning Algorithms',
+        description:
+          "Explore the realm of <strong>unsupervised learning</strong>, dealing with unlabeled data to discover underlying structures. Study algorithms like <strong>k-means clustering</strong>, <strong>hierarchical clustering</strong>, and <strong>Principal Component Analysis (PCA)</strong>. Learn how to assess the quality of clusters and reduce dimensionality to simplify complex datasets while retaining essential information. This module provides hands-on experience in uncovering patterns and groupings within data, which are crucial for tasks such as customer segmentation and anomaly detection.",
+      },
+      {
+        title: 'Model Evaluation and Selection',
+        description:
+          "Learn how to evaluate and select the best machine learning models for your tasks. This module covers performance metrics for regression (e.g., <strong>Mean Squared Error</strong>, <strong>R-squared</strong>) and classification (e.g., <strong>Accuracy</strong>, <strong>Precision</strong>, <strong>Recall</strong>, <strong>F1 Score</strong>). Understand the concepts of <strong>overfitting</strong> and <strong>underfitting</strong>, and how to address them using techniques like <strong>cross-validation</strong> and <strong>regularization</strong>. Explore methods for model tuning, such as grid search and random search, to optimize hyperparameters systematically.",
+      },
+      {
+        title: 'Feature Engineering and Selection',
+        description:
+          "Gain insights into <strong>feature engineering</strong>, the art of transforming raw data into meaningful input for machine learning models. Learn techniques for handling categorical variables (one-hot encoding, label encoding), dealing with missing values, and scaling features. Explore advanced methods such as feature creation through polynomial combinations, interaction terms, and using domain knowledge to enhance model performance. Additionally, study <strong>feature selection</strong> techniques, including filter methods, wrapper methods, and embedded methods, to identify and retain the most influential features while reducing dimensionality.",
+      },
+      {
+        title: 'Advanced Machine Learning Techniques',
+        description:
+          "Delve into advanced machine learning concepts to enhance model accuracy and robustness. Study <strong>ensemble methods</strong> like <strong>Bagging</strong> (Bootstrap Aggregating) and <strong>Boosting</strong> (including <strong>AdaBoost</strong>, <strong>Gradient Boosting</strong>, and <strong>XGBoost</strong>). Understand how combining multiple models can lead to better performance than individual models. Explore <strong>dimensionality reduction</strong> techniques beyond PCA, such as t-SNE and LDA. This module also introduces concepts like <strong>kernel methods</strong> in SVMs, allowing for nonlinear decision boundaries.",
+      },
+      {
+        title: 'Introduction to Deep Learning',
+        description:
+          "Embark on the journey into <strong>deep learning</strong> with a focus on <strong>neural networks</strong>. Understand the architecture of neural networks, including layers, neurons, weights, and activation functions. Learn how backpropagation and gradient descent are used to train networks. This module covers building and training neural networks using frameworks like <strong>TensorFlow</strong> and <strong>Keras</strong>, with practical examples on image recognition and natural language processing tasks. Gain insights into convolutional neural networks (CNNs) and recurrent neural networks (RNNs), which are powerful for specific data types.",
+      },
+      {
+        title: 'Natural Language Processing (NLP)',
+        description:
+          "Delve into <strong>natural language processing</strong> and learn how to process and analyze textual data. Cover text preprocessing steps such as tokenization, stop-word removal, stemming, and lemmatization. Understand techniques like <strong>bag-of-words</strong>, <strong>TF-IDF</strong>, and explore advanced models like <strong>Word Embeddings</strong> (Word2Vec, GloVe). This module also introduces you to building models for sentiment analysis, topic modeling, and language translation using deep learning techniques like sequence-to-sequence models and transformers.",
+      },
+      {
+        title: 'Time Series Analysis and Forecasting',
+        description:
+          "Understand the unique aspects of <strong>time series data</strong> and how to model temporal dependencies. Learn about time series decomposition, trend analysis, seasonality, and autocorrelation. Study forecasting models such as <strong>ARIMA</strong>, <strong>SARIMA</strong>, and <strong>Exponential Smoothing</strong>. Additionally, explore advanced techniques using <strong>Recurrent Neural Networks (RNNs)</strong> and <strong>Long Short-Term Memory (LSTM)</strong> networks for capturing long-term dependencies in sequential data. Apply these methods to financial data, weather forecasting, and other applications where time-dependent patterns are crucial.",
+      },
+      {
+        title: 'Reinforcement Learning',
+        description:
+          "Get introduced to <strong>reinforcement learning</strong>, a type of machine learning where agents learn optimal behaviors through trial-and-error interactions with an environment. Study foundational concepts such as <strong>Markov Decision Processes</strong>, <strong>reward functions</strong>, and <strong>policy gradients</strong>. Explore algorithms like <strong>Q-Learning</strong>, <strong>Deep Q-Networks (DQNs)</strong>, and <strong>Policy Optimization</strong>. Understand how reinforcement learning is applied in robotics, gaming (e.g., training AI to play chess or Go), and decision-making systems.",
+      },
+      {
+        title: 'Model Deployment and Serving',
+        description:
+          "Learn how to transition machine learning models from development to production. This module covers creating RESTful APIs using frameworks like <strong>Flask</strong> or <strong>FastAPI</strong> to serve your models. Understand containerization with <strong>Docker</strong> for consistent deployment environments and orchestration with <strong>Kubernetes</strong>. Explore cloud deployment options using services from <strong>AWS</strong> (SageMaker), <strong>Google Cloud Platform</strong> (AI Platform), and <strong>Microsoft Azure</strong> (Machine Learning Studio). Additionally, learn best practices for monitoring model performance, handling scalability, and implementing continuous integration/continuous deployment (CI/CD) pipelines.",
+      },
+      {
+        title: 'Ethics and Responsible AI',
+        description:
+          "Examine the ethical considerations and societal impacts of deploying machine learning models. Discuss topics such as <strong>algorithmic bias</strong>, <strong>fairness</strong>, <strong>transparency</strong>, and <strong>accountability</strong>. Learn about regulatory frameworks like <strong>GDPR</strong> and how they affect data handling and privacy. Explore techniques for building explainable AI models and conducting ethical AI audits. This module emphasizes the importance of developing responsible AI systems that align with legal standards and ethical norms.",
+      },
+      {
+        title: 'Case Studies and Industry Applications',
+        description:
+          "Explore real-world case studies across various industries such as healthcare, finance, e-commerce, and transportation. Analyze how machine learning models are developed and applied to solve complex problems like disease prediction, fraud detection, recommendation systems, and autonomous driving. Learn from successes and challenges in these domains, gaining insights into best practices and strategies for tackling industry-specific issues.",
+      },
+      {
+        title: 'Capstone Projects',
+        description:
+          "Apply your knowledge in comprehensive <strong>capstone projects</strong>. Choose from projects like developing a sentiment analysis tool, building an image classification system, or creating a predictive maintenance model. Work through all stages of the machine learning pipeline: data collection, preprocessing, exploratory data analysis, model selection, hyperparameter tuning, evaluation, and deployment. Receive feedback and guidance, and build a portfolio that showcases your skills to potential employers.",
       },
     ],
     images: [
       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIcBbGo5FZUXE5xukkNMiu_lv4L5DOywDlKA&s',
       'https://m.media-amazon.com/images/I/71o+UlqkwdL._AC_UF894,1000_QL80_.jpg',
     ],
-    // resources: [
-    //   {
-    //     type: 'Livre',
-    //     title:
-    //       'Apprentissage Automatique avec Scikit-Learn, Keras et TensorFlow',
-    //     author: 'Aurélien Géron',
-    //     link: 'https://www.oreilly.com/library/view/hands-on-machine-learning/9781492032632/',
-    //   },
-    //   {
-    //     type: 'Cours en Ligne',
-    //     title: 'Apprentissage Automatique avec Python',
-    //     provider: 'Coursera',
-    //     link: 'https://www.coursera.org/learn/machine-learning-with-python',
-    //   },
-    //   {
-    //     type: 'Documentation',
-    //     title: "Guide de l'Utilisateur Scikit-Learn",
-    //     link: 'https://scikit-learn.org/stable/user_guide.html',
-    //   },
-    // ],
-    // certification: true,
-    // language: 'Français',
-    // enrollment_link: 'https://www.example.com/enroll',
+    links: [
+      'https://www.perplexity.ai/search/new?q=Python+Machine+Learning',
+      'https://www.perplexity.ai/search/new?q=Data+Preprocessing+in+Python',
+      'https://www.perplexity.ai/search/new?q=Machine+Learning+Algorithms',
+      'https://www.perplexity.ai/search/new?q=Model+Evaluation+Techniques',
+      'https://www.perplexity.ai/search/new?q=Deep+Learning+with+Python',
+      'https://www.perplexity.ai/search/new?q=Machine+Learning+Projects',
+    ],
   },
   'prime-number-discovery': {
     title: 'Recent Advances in Prime Number Research',
@@ -205,9 +251,20 @@ export default function Discover() {
 
         <div className="prose max-w-none">
           <p
-            className="text-lg mb-8"
+            className="text-lg mb-4"
             dangerouslySetInnerHTML={{ __html: content.introduction }}
           ></p>
+
+          {content.links && <div className="p-4 bg-gray-100 border border-gray-300 rounded overflow-hidden mb-4">
+            <h4 className="text-lg font-medium mb-2">
+              References
+            </h4>
+            <ul className="flex flex-col space-y-2">
+              {content.links.map((link, index) => <li key={index} className="flex items-center truncate"><span className="mr-2 text-blue-600">🔗</span><a href={link} target="_blank" rel="noreferrer" className="text-blue-600 hover:underline">{link.replace(/^https?:\/\/(www\.)?perplexity.ai\/search\/new/, 'chat.com\/search')}
+              </a>
+              </li>)}
+            </ul>
+          </div>}
 
           {content.subtopics.map((subtopic, i) => (
             <section key={i} className="mb-8">
