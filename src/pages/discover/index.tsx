@@ -199,7 +199,7 @@ export default function Discover() {
   return (
     <div className="min-h-screen bg-white">
       <Header />
-      <main className="container mx-auto py-8">
+      <main className="container mx-auto pb-32 pt-40">
         {loading ? (
           <LoadingSkeleton />
         ) : contents.length > 0 ? (
