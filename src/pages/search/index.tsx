@@ -95,7 +95,7 @@ export default function Search() {
             <Card
               key={index}
               className="overflow-hidden border-0 shadow-sm hover:shadow-md transition-shadow rounded-none"
-              onClick={() => navigate(`/what-to-learn?q=${encodeURIComponent(article.title)}`)}
+              onClick={() => navigate(`/g/${encodeURIComponent(article.title)}`)}
             >
               <CardHeader className="p-0">
                 <img
