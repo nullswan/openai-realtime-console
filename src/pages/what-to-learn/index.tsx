@@ -4,16 +4,16 @@ import {
   ArrowUpCircle,
   ArrowUpRight,
   Flame,
-  ArrowRight,
   ChevronRight,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '../../@/components/ui/button';
 import { Input } from '../../@/components/ui/input';
 import { ScrollArea, ScrollBar } from '../../@/components/ui/scroll-area';
 import { getSuggestions } from '../../utils/get_suggestions';
 import { getRoadmap } from '../../utils/get_roadmap';
+import Header from '../../components/Header/Header';
 
 // These types are assumed to be defined elsewhere in your project
 type RoadmapResponse = {
@@ -27,12 +27,15 @@ type Suggestion = {
 
 export default function Component() {
   const name = localStorage.getItem('name') || 'learner';
+  const [searchParams] = useSearchParams();
   const apiKey = process.env.REACT_APP_OPENAI_API_KEY || '';
   const [roadmap, setRoadmap] = useState<RoadmapResponse | null>(null);
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  const query = searchParams.get('q');
 
   useEffect(() => {
     const fetchSuggestions = async () => {
@@ -58,7 +61,19 @@ export default function Component() {
     };
 
     fetchSuggestions();
-  }, [apiKey]);
+    handleQuery();
+
+  }, [apiKey, query]);
+
+
+  const handleQuery = async () => {
+    if (query) {
+      setInputValue(query);
+      setIsLoading(true);
+      await handleSubmit(query); // Pass query directly
+      setIsLoading(false);
+    }
+  };
 
   const handleEnterClick = async (
     event: React.KeyboardEvent<HTMLInputElement>
@@ -75,12 +90,14 @@ export default function Component() {
     }
   };
 
-  const handleSubmit = async () => {
-    if (inputValue) {
-      setIsLoading(true);
-      // Assuming getRoadmap is defined elsewhere
-      const roadmap = await getRoadmap(apiKey, inputValue, setRoadmap);
-      setIsLoading(false);
+  const handleSubmit = async (value?: string) => {
+    const submitValue = value !== undefined ? value : inputValue;
+    if (submitValue) {
+      try {
+        const roadmapData = await getRoadmap(apiKey, submitValue, setRoadmap);
+      } catch (error) {
+        console.error('Error fetching roadmap:', error);
+      }
     }
   };
 
@@ -115,7 +132,7 @@ export default function Component() {
               className="w-full pr-14 h-12 text-lg rounded-full border-gray-200"
             />
             <Button
-              onClick={handleSubmit}
+              onClick={() => handleSubmit()}
               className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-black text-white rounded-full hover:bg-gray-800 transition-colors"
               size="icon"
               disabled={isLoading}
@@ -135,7 +152,7 @@ export default function Component() {
                   <Button
                     key={index}
                     variant="outline"
-                    onClick={() => setInputValue(suggestion.subject)}
+                    onClick={() => handleSubmit(suggestion.subject)}
                     className="flex-shrink-0 rounded-full border-gray-200 text-xs py-1 px-3"
                   >
                     <span>{suggestion.subject}</span>
