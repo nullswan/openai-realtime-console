@@ -25,7 +25,7 @@ export default function Header() {
   const lastParameter = location.pathname.split('/').pop();
 
   return (
-    <header className="fixed top-0 left-0 right-0 w-screen bg-white h-fit flex items-center justify-between p-4 px-8">
+    <header className="fixed top-0 left-0 right-0 w-screen bg-white h-fit flex items-center justify-between p-4 px-8 z-40">
       <div className="flex items-center gap-2" onClick={() => navigate('/')}>
         <img src="/logo.svg" alt="Discover logo" />
       </div>
@@ -92,7 +92,7 @@ export default function Header() {
               <div className="flex space-x-4">
                 <button
                   className="mt-4 bg-black text-white px-4 py-2 rounded-full"
-                  onClick={() => window.open(`http://localhost:3000/g/${lastParameter}`, '_blank')} 
+                  onClick={() => window.open(`http://localhost:3000/g/${lastParameter}`, '_blank')}
                 >
                   Open It
                 </button>
