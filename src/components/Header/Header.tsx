@@ -27,12 +27,13 @@ export default function Header() {
           </Button>
         ) : (
           <>
-            <Button variant="ghost" className="text-black">
+            {/* <Button variant="ghost" className="text-black">
               My articles
-            </Button>
+            </Button> */}
             <Button
               size="sm"
               className="gap-1 bg-black text-white hover:bg-black/90 rounded-full px-3"
+              onClick={() => navigate('/what-to-learn')}
             >
               <Plus className="h-4 w-4" />
               New
