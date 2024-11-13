@@ -97,7 +97,7 @@ export default function Discover() {
     <div className="min-h-screen bg-white ">
       <Header />
       <div>{subjectId}</div>
-      <div>{description}</div>
+      <div><pre>{description}</pre></div>
     </div>
   );
 }
